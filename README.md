@@ -1,59 +1,91 @@
-# AgendaPsicologos
+# 🧠 Agenda Psicólogos
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.15.
+Projeto de agendamento de compromissos feito em **Angular 17 com Material Design**, voltado para uso profissional de psicólogos e terapeutas.
 
-## Development server
+---
 
-To start a local development server, run:
+## 🚀 Tecnologias utilizadas
+
+- ✅ Angular 17+
+- ✅ Angular Material
+- ✅ SCSS (SASS)
+- ✅ Standalone Components
+- ✅ Arquitetura modular
+- ✅ TypeScript
+
+---
+
+## 🧩 Estrutura de pastas
 
 ```bash
+src/app/
+├── components/        # Componentes reutilizáveis
+├── interfaces/        # Tipagens e contratos
+├── pages/             # Páginas da aplicação
+│   └── agendamentos/
+│       ├── agendamentos/
+│       ├── calendario/
+│       └── compromissos/
+├── pipes/             # Pipes personalizados
+├── services/          # Comunicação de dados
+├── utils/             # Funções auxiliares
+├── validators/        # Validadores customizados
+
+✅ Funcionalidades implementadas
+ Visualização de compromissos
+
+ Filtro por semana ou mês
+
+ Integração com serviço mock local
+
+ Componentes 100% standalone
+
+ Layout adaptado para psicologia
+
+📅 Funcionalidades futuras
+ Formulário com validação reativa para novo agendamento
+
+ Busca por nome do paciente
+
+ Edição de agendamentos
+
+ Responsividade mobile
+
+ Backend com Java Spring Boot
+
+ # Clone o repositório
+git clone https://github.com/SeuUsuario/agenda-psicologos.git
+
+# Entre na pasta
+cd agenda-psicologos
+
+# Instale as dependências
+npm install
+
+# Rode a aplicação
 ng serve
-```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+# Acesse no navegador
+http://localhost:4200
 
-## Code scaffolding
+🧠 Explicação técnica
+O projeto foi feito com Angular 17 usando Standalone Components
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+A estrutura em pastas separa responsabilidades de forma limpa e escalável
 
-```bash
-ng generate component component-name
-```
+Os dados são mockados localmente em um AgendamentoService
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+A tela inicial usa 3 componentes principais:
 
-```bash
-ng generate --help
-```
+CalendarioComponent: filtro por semana/mês
 
-## Building
+CompromissosComponent: lista os agendamentos filtrados
 
-To build the project run:
+AgendamentosComponent: componente pai que integra os dois acima
 
-```bash
-ng build
-```
+👨‍💻 Autor
+Feito por Paulo Henrique Barbosa de Lima
+Desenvolvedor Front-end focado em Angular e boas práticas de código.
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+📌 Licença
+Este projeto é livre para uso pessoal ou profissional, sem restrição comercial.

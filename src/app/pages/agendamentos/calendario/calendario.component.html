@@ -1,0 +1,16 @@
+<mat-card class="calendario-card">
+  <mat-card-title>📅 Escolha a data</mat-card-title>
+
+  <div class="filtros">
+    <mat-button-toggle-group [(ngModel)]="modo" (change)="emitirFiltro()" appearance="legacy">
+      <mat-button-toggle value="semana">Semana</mat-button-toggle>
+      <mat-button-toggle value="mes">Mês</mat-button-toggle>
+    </mat-button-toggle-group>
+
+    <mat-form-field appearance="outline">
+      <input matInput [matDatepicker]="picker" [(ngModel)]="dataSelecionada" (dateChange)="emitirFiltro()">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+  </div>
+</mat-card>

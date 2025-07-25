@@ -1,0 +1,20 @@
+.compromissos-card {
+  padding: 1rem;
+  border-radius: 12px;
+  background-color: #fafafa;
+
+  mat-card-title {
+    font-size: 1.2rem;
+    color: #333;
+    margin-bottom: 1rem;
+  }
+
+  .spacer {
+    flex: 1;
+  }
+
+  .vazio {
+    color: #999;
+    font-style: italic;
+  }
+}

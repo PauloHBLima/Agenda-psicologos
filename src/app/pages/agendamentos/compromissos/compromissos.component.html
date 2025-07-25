@@ -1,0 +1,17 @@
+<mat-card class="compromissos-card">
+  <mat-card-title>🗂 Compromissos</mat-card-title>
+
+  <div *ngIf="listaFiltrada.length > 0; else vazio">
+    <mat-list>
+      <mat-list-item *ngFor="let c of listaFiltrada">
+        <strong>{{ c.nomePaciente }}</strong>
+        <span class="spacer"></span>
+        {{ c.data | date:'shortDate' }} - {{ c.hora }}
+      </mat-list-item>
+    </mat-list>
+  </div>
+
+  <ng-template #vazio>
+    <p class="vazio">Nenhum compromisso para o período selecionado.</p>
+  </ng-template>
+</mat-card>

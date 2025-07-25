@@ -1,0 +1,9 @@
+<div class="layout">
+  <app-calendario (filtroData)="atualizarFiltro($event)"></app-calendario>
+
+  <app-compromissos
+    [modo]="modoAtual"
+    [data]="dataAtual"
+    [compromissos]="compromissos">
+  </app-compromissos>
+</div>

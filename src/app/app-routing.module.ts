@@ -1,9 +1,14 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AgendamentosComponent } from './pages/agendamentos/agendamentos.component';
 
 const routes: Routes = [
-  { path: '', component: AgendamentosComponent },
+  {
+    path: '',
+    loadComponent: () =>
+      import('./pages/agendamentos/agendamentos/agendamentos.component')
+        .then(m => m.AgendamentosComponent)
+  },
+  { path: '**', redirectTo: '' }
 ];
 
 @NgModule({

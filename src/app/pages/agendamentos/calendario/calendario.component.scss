@@ -1,0 +1,21 @@
+.calendario-card {
+  background-color: #fefefe;
+  border-radius: 12px;
+  padding: 1rem;
+
+  mat-card-title {
+    font-size: 1.3rem;
+    color: #5a5a5a;
+    margin-bottom: 1rem;
+  }
+
+  .filtros {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    mat-form-field {
+      width: 100%;
+    }
+  }
+}
