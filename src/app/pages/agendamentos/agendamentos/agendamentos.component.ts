@@ -1,32 +1,81 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { AppointmentService } from '../../../services/appointment.service';
+import { Appointment } from '../../../interfaces/appointment.interface';
+
 import { CommonModule } from '@angular/common';
-import { CalendarioComponent } from '../calendario/calendario.component';
-import { CompromissosComponent } from '../compromissos/compromissos.component';
-import { Agendamento } from '../../../interfaces/agendamento.interface';
-import { AgendamentoService } from '../../../services/agendamento.service';
+import { FormsModule } from '@angular/forms';
+import { MatCardModule } from '@angular/material/card';
+import { MatListModule } from '@angular/material/list';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
-  selector: 'app-agendamentos',
   standalone: true,
-  imports: [CommonModule, CalendarioComponent, CompromissosComponent],
+  selector: 'app-agendamentos',
   templateUrl: './agendamentos.component.html',
-  styleUrls: ['./agendamentos.component.scss']
+  styleUrls: ['./agendamentos.component.scss'],
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatCardModule,
+    MatListModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatButtonToggleModule,
+    MatButtonModule,
+    MatInputModule
+  ]
 })
-export class AgendamentosComponent {
-  compromissos: Agendamento[] = [];
-  modoAtual: 'semana' | 'mes' = 'semana';
-  dataAtual: Date = new Date();
+export class AgendamentosComponent implements OnInit {
+  appointments: Appointment[] = [];            
+  appointmentsFiltrados: Appointment[] = [];    
 
-  constructor(private agendamentoService: AgendamentoService) {}
+  dataBase = new Date();                        
+  modo: 'semana' | 'mes' = 'semana';             
+  buscaNome: string = '';                       
+
+  constructor(private service: AppointmentService) {}
 
   ngOnInit(): void {
-    this.agendamentoService.listar().subscribe((res) => {
-      this.compromissos = res;
+    this.filtrar(); 
+  }
+
+  filtrar(): void {
+    const inicio = new Date(this.dataBase);
+    const fim = new Date(this.dataBase);
+
+    if (this.modo === 'semana') {
+      fim.setDate(inicio.getDate() + 6);
+    } else {
+      fim.setMonth(inicio.getMonth() + 1);
+      fim.setDate(inicio.getDate() - 1);
+    }
+
+    const firstDate = inicio.toISOString();
+    const lastDate = fim.toISOString();
+
+    this.service.getByDate(firstDate, lastDate).subscribe({
+      next: (res) => {
+        this.appointments = res.content;
+        this.aplicarFiltro(); 
+      },
+      error: (err) => console.error(err)
     });
   }
 
-  atualizarFiltro(filtro: { modo: string; data: Date }) {
-    this.modoAtual = filtro.modo as 'semana' | 'mes';
-    this.dataAtual = filtro.data;
+  aplicarFiltro(): void {
+    const termo = this.buscaNome.trim().toLowerCase();
+
+    if (!termo) {
+      this.appointmentsFiltrados = this.appointments;
+      return;
+    }
+
+    this.appointmentsFiltrados = this.appointments.filter(ag =>
+      ag.clientName?.toLowerCase().includes(termo)
+    );
   }
 }

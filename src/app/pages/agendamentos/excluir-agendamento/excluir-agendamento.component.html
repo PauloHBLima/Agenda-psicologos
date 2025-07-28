@@ -1,0 +1,12 @@
+<h2 mat-dialog-title>Confirmar exclusão</h2>
+
+<mat-dialog-content>
+  <p>Tem certeza que deseja excluir este agendamento?</p>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-stroked-button (click)="cancelar()" [disabled]="loading">Cancelar</button>
+  <button mat-raised-button color="warn" (click)="confirmar()" [disabled]="loading">
+    Excluir
+  </button>
+</mat-dialog-actions>
