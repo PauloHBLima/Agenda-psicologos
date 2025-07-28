@@ -1,0 +1,65 @@
+<mat-card class="p-4">
+
+  <h2 class="mb-4">Editar Agendamento</h2>
+
+  <div *ngIf="loading" class="text-center p-4">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p class="mt-3">Carregando agendamento...</p>
+  </div>
+
+  <form *ngIf="!loading" [formGroup]="form" (ngSubmit)="submit()">
+
+    <div class="d-flex mb-3">
+      
+      <mat-form-field appearance="fill" class="flex-grow-1 me-2">
+        <mat-label>Data</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="date" />
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        <mat-error *ngIf="form.get('date')?.invalid && (form.get('date')?.touched || form.get('date')?.dirty)">
+          Data obrigatória
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" style="width: 120px;">
+        <mat-label>Hora</mat-label>
+        <input matInput type="time" formControlName="time" />
+        <mat-error *ngIf="form.get('time')?.invalid && (form.get('time')?.touched || form.get('time')?.dirty)">
+          Hora obrigatória
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <mat-form-field appearance="fill" class="w-100 mb-3">
+      <mat-label>Cliente</mat-label>
+      <input
+        type="text"
+        matInput
+        [matAutocomplete]="auto"
+        [formControl]="clientIdControl"
+        [value]="displayClientName(clientIdControl.value)" />
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayClientName.bind(this)">
+        <mat-option *ngFor="let client of filteredClients | async" [value]="client.id">
+          {{ client.name }}
+        </mat-option>
+      </mat-autocomplete>
+      <mat-error *ngIf="form.get('clientId')?.invalid">
+        Selecione um cliente válido
+      </mat-error>
+    </mat-form-field>
+
+    <mat-checkbox formControlName="paid" class="mb-4">Pagamento Realizado</mat-checkbox>
+
+    <div class="d-flex justify-content-between">
+      <button mat-stroked-button color="warn" type="button" (click)="cancelar()" [disabled]="saving">
+        Cancelar
+      </button>
+
+      <button mat-raised-button color="primary" type="submit" [disabled]="form.invalid || saving">
+        <mat-spinner *ngIf="saving" diameter="20"></mat-spinner>
+        <span *ngIf="!saving">Atualizar</span>
+      </button>
+    </div>
+
+  </form>
+</mat-card>
