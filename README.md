@@ -1,6 +1,6 @@
 # 🧠 Agenda Psicólogos
 
-Projeto de agendamento de compromissos feito em **Angular 17 com Material Design**, voltado para uso profissional de psicólogos e terapeutas.
+Sistema de agendamentos desenvolvido em **Angular 17 com Angular Material**, focado no gerenciamento de compromissos para psicólogos, terapeutas e profissionais da saúde mental. A aplicação oferece funcionalidades para controle de datas, clientes, pagamentos e muito mais.
 
 ---
 
@@ -9,51 +9,71 @@ Projeto de agendamento de compromissos feito em **Angular 17 com Material Design
 - ✅ Angular 17+
 - ✅ Angular Material
 - ✅ SCSS (SASS)
-- ✅ Standalone Components
-- ✅ Arquitetura modular
 - ✅ TypeScript
+- ✅ Standalone Components
+- ✅ Arquitetura Modular
 
 ---
 
-## 🧩 Estrutura de pastas
+## 📁 Estrutura de Pastas (`src/app/`)
 
 ```bash
 src/app/
-├── components/        # Componentes reutilizáveis
-├── interfaces/        # Tipagens e contratos
-├── pages/             # Páginas da aplicação
+├── components/                        # Componentes reutilizáveis
+├── interfaces/                        # Tipagens (DTOs do backend em Java)
+├── pages/                             # Páginas principais da aplicação
 │   └── agendamentos/
-│       ├── agendamentos/
-│       ├── calendario/
-│       └── compromissos/
-├── pipes/             # Pipes personalizados
-├── services/          # Comunicação de dados
-├── utils/             # Funções auxiliares
-├── validators/        # Validadores customizados
+│       ├── agendamentos/             # Componente pai da seção
+│       ├── listar-agendamentos/     # Listagem com paginação e ações (editar/excluir)
+│       ├── criar-agendamento/       # Formulário reativo de criação
+│       ├── editar-agendamento/      # Edição com autocomplete e data/hora separados
+│       ├── excluir-agendamento/     # (Rota para confirmação e lógica de exclusão)
+│       ├── novo-agendamento/        # Outro modelo de criação (teste/refatoração)
+│       ├── compromissos/            # Visualização de compromissos por cliente
+│       └── calendario/              # (Em desenvolvimento)
+├── pipes/                            # Pipes customizados (a criar)
+├── services/                         # Serviços HTTP (ex: AppointmentService)
+├── shared/                           # Componentes compartilháveis entre páginas
+├── utils/                            # Funções auxiliares e helpers
+├── validators/                       # Validadores personalizados (a implementar)
 
-✅ Funcionalidades implementadas
- Visualização de compromissos
+✅ Funcionalidades Implementadas
+✅ Listagem de agendamentos com paginação, ações de edição e exclusão
 
- Filtro por semana ou mês
+✅ Criação de agendamento com formulário reativo e validação
 
- Integração com serviço mock local
+✅ Edição de agendamento com autocomplete e separação entre data/hora
 
- Componentes 100% standalone
+✅ Exclusão de agendamento (rota dedicada, lógica de confirmação)
 
- Layout adaptado para psicologia
+✅ Visualização de compromissos de um cliente
 
-📅 Funcionalidades futuras
- Formulário com validação reativa para novo agendamento
+✅ Integração com back-end Java (DTOs definidos)
 
- Busca por nome do paciente
+✅ Arquitetura standalone e modular
 
- Edição de agendamentos
+✅ Design profissional com Angular Material
 
- Responsividade mobile
+✅ Responsabilidade separada por pastas e arquivos
 
- Backend com Java Spring Boot
+📅 Funcionalidades em Desenvolvimento
+ Componente de calendário com visualização semanal/mensal
 
- # Clone o repositório
+ Busca por nome do paciente com autocomplete
+
+ Validações personalizadas (datas futuras, horários, etc.)
+
+ Pipes customizados (ex: status de pagamento, formatação de CPF)
+
+ Responsividade completa para dispositivos móveis
+
+ Autenticação (login/logout) com guardas de rota
+
+💻 Como rodar o projeto
+bash
+Copiar
+Editar
+# Clone o repositório
 git clone https://github.com/SeuUsuario/agenda-psicologos.git
 
 # Entre na pasta
@@ -67,25 +87,23 @@ ng serve
 
 # Acesse no navegador
 http://localhost:4200
+🧠 Explicação Técnica
+Projeto desenvolvido com Angular 17 e componentes standalone (sem uso de módulos).
 
-🧠 Explicação técnica
-O projeto foi feito com Angular 17 usando Standalone Components
+Arquitetura modular e escalável, separando responsabilidades por pasta.
 
-A estrutura em pastas separa responsabilidades de forma limpa e escalável
+Comunicação com back-end Java por meio de DTOs tipados.
 
-Os dados são mockados localmente em um AgendamentoService
+Uso do Reactive Forms com validações embutidas e feedback visual.
 
-A tela inicial usa 3 componentes principais:
+Componentes independentes para listagem, criação, edição e exclusão de agendamentos.
 
-CalendarioComponent: filtro por semana/mês
-
-CompromissosComponent: lista os agendamentos filtrados
-
-AgendamentosComponent: componente pai que integra os dois acima
+Estilo aplicado com Angular Material e boas práticas de UI/UX.
 
 👨‍💻 Autor
-Feito por Paulo Henrique Barbosa de Lima
-Desenvolvedor Front-end focado em Angular e boas práticas de código.
+Paulo Henrique Barbosa de Lima
+Desenvolvedor Front-end focado em Angular e aplicações organizadas por boas práticas e escalabilidade.
 
 📌 Licença
-Este projeto é livre para uso pessoal ou profissional, sem restrição comercial.
+Este projeto está disponível para uso pessoal ou profissional, livre para modificação e adaptação conforme a necessidade.
+
