@@ -1,0 +1,58 @@
+:host {
+  display: flex;
+  justify-content: center;
+  padding: 2rem 1rem;
+
+  mat-card {
+    width: 100%;
+    max-width: 480px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border-radius: 8px;
+  }
+
+  h2 {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+
+    mat-form-field {
+      margin-bottom: 1.2rem;
+
+      .mat-form-field-flex {
+        background-color: #fafafa;
+        border-radius: 4px;
+      }
+    }
+
+    mat-checkbox {
+      margin-bottom: 1.5rem;
+      font-weight: 500;
+      color: #555;
+    }
+
+    button {
+      min-width: 120px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+  }
+}
+
+/* Responsividade */
+@media (max-width: 400px) {
+  :host {
+    padding: 1rem;
+
+    mat-card {
+      padding: 1rem;
+      box-shadow: none;
+      border-radius: 0;
+    }
+  }
+}

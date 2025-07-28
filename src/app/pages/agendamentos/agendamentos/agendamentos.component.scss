@@ -1,6 +1,16 @@
-.layout {
-  display: grid;
-  gap: 2rem;
-  padding: 2rem;
-  grid-template-columns: 1fr;
+mat-card {
+  margin-bottom: 16px;
+}
+
+.mat-list-item {
+  border-bottom: 1px solid #eee;
+  padding-bottom: 8px;
+}
+
+.text-success {
+  color: green;
+}
+
+.text-danger {
+  color: red;
 }
