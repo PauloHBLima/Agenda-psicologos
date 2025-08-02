@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Appointment } from '../interfaces/appointment.interface';
+import { environment } from '../../environments/environment';
 
 export interface Page<T> {
   content: T[];
@@ -15,7 +16,7 @@ export interface Page<T> {
   providedIn: 'root'
 })
 export class AppointmentService {
-  private readonly apiUrl = 'http://localhost:8080/appointments'; // ajuste se necessário
+  private readonly apiUrl = `${environment.apiBaseUrl}/appointments`; // ajuste se necessário
 
   constructor(private http: HttpClient) {}
 
@@ -36,7 +37,8 @@ getAllPaginated(page: number, size: number): Observable<Page<Appointment>> {
       .set('lastDate', lastDate)
       .set('page', page)
       .set('size', size);
-
+console.log("firstdate:", firstDate)
+console.log("lastdate:", lastDate)
     return this.http.get<Page<Appointment>>(`${this.apiUrl}/findByDate`, { params });
   }
 
