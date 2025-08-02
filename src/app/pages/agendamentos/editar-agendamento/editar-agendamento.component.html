@@ -31,21 +31,23 @@
     </div>
 
     <mat-form-field appearance="fill" class="w-100 mb-3">
-      <mat-label>Cliente</mat-label>
-      <input
-        type="text"
-        matInput
-        [matAutocomplete]="auto"
-        [formControl]="clientIdControl" />
-      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayClientName.bind(this)">
-        <mat-option *ngFor="let client of filteredClients | async" [value]="client.id">
-          {{ client.name }}
-        </mat-option>
-      </mat-autocomplete>
-      <mat-error *ngIf="form.get('clientId')?.invalid">
-        Selecione um cliente válido
-      </mat-error>
-    </mat-form-field>
+  <mat-label>Cliente</mat-label>
+  <input
+    type="text"
+    matInput
+    [formControl]="clientIdControl"
+    [matAutocomplete]="auto"
+  />
+  <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayClientName.bind(this)" (optionSelected)="onClientSelected($event)">
+    <mat-option *ngFor="let client of filteredClients | async" [value]="client.id">
+      {{ client.name }}
+    </mat-option>
+  </mat-autocomplete>
+  <mat-error *ngIf="form.get('clientId')?.invalid">
+    Selecione um cliente válido
+  </mat-error>
+</mat-form-field>
+
 
     <mat-checkbox formControlName="paid" class="mb-4">
       Pagamento Realizado

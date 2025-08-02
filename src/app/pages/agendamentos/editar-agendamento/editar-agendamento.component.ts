@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { AppointmentService } from '../../../services/appointment.service';
 import { Appointment } from '../../../interfaces/appointment.interface';
 import { CommonModule } from '@angular/common';
@@ -15,10 +15,15 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatCardModule } from '@angular/material/card';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 import { Observable, of } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
+import { AppointmentUpdateDTO } from '../../../interfaces/appointmentUpdateDTO';
+import { MatIconModule } from '@angular/material/icon';
+import { PaymentStatusPipe } from "../../../pipes/custom-pipes";
+
+
 
 interface Client {
   id: number;
@@ -43,10 +48,17 @@ interface Client {
     MatCardModule,
     MatSnackBarModule,
     MatProgressSpinnerModule,
-    MatAutocompleteModule
-  ]
+    MatAutocompleteModule,
+    MatIconModule,
+]
 })
 export class EditarAgendamentoComponent implements OnInit {
+
+  onClientSelected(event: MatAutocompleteSelectedEvent) {
+  const selectedClientId = event.option.value;
+  this.form.get('clientId')?.setValue(selectedClientId);
+}
+
   form!: FormGroup;
   id!: number;
   loading = true;
@@ -54,6 +66,10 @@ export class EditarAgendamentoComponent implements OnInit {
 
   clients: Client[] = [];
   filteredClients: Observable<Client[]> = of([]);
+
+  endTimeValue!: Date;
+  appointmentStatusValue!: string;
+  priceValue!: number | null;
 
   constructor(
     private fb: FormBuilder,
@@ -68,6 +84,13 @@ export class EditarAgendamentoComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.form = this.fb.group({
+      date: [null, Validators.required],
+      time: [null, Validators.required],
+      paid: [false, Validators.required],
+      clientId: [null, [Validators.required, Validators.min(1)]]
+    });
+
     this.route.paramMap.subscribe(params => {
       const paramId = params.get('id');
       if (paramId) {
@@ -79,20 +102,15 @@ export class EditarAgendamentoComponent implements OnInit {
       }
     });
 
-    this.form = this.fb.group({
-      date: [null, Validators.required],
-      time: [null, Validators.required],
-      paid: [false, Validators.required],
-      clientId: [null, [Validators.required, Validators.min(1)]]
-    });
-
     this.loadClients();
 
     this.filteredClients = this.clientIdControl.valueChanges.pipe(
-    startWith(this.clientIdControl.value), 
-    map(value => typeof value === 'string' ? value : this.displayClientName(value)), 
-    map(name => name ? this._filterClients(name) : this.clients.slice())
-  );
+      startWith(this.clientIdControl.value),
+      map(value => {
+        const name = typeof value === 'string' ? value : this.displayClientName(value);
+        return name ? this._filterClients(name) : this.clients.slice();
+      })
+    );
   }
 
   loadAgendamento(): void {
@@ -105,6 +123,10 @@ export class EditarAgendamentoComponent implements OnInit {
           return;
         }
 
+        this.endTimeValue = new Date(data.endTime);
+        this.appointmentStatusValue = data.appointmentStatus;
+        this.priceValue = data.price ?? null;
+
         this.form.patchValue({
           date: start,
           time: this.formatTime(start),
@@ -113,6 +135,7 @@ export class EditarAgendamentoComponent implements OnInit {
         });
 
         this.clientIdControl.setValue(data.clientId);
+
         this.loading = false;
       },
       error: () => {
@@ -135,10 +158,11 @@ export class EditarAgendamentoComponent implements OnInit {
     return this.clients.filter(client => client.name.toLowerCase().includes(filterValue));
   }
 
-displayClientName(id: number | null): string {
-  const client = this.clients.find(c => c.id === id);
-  return client ? client.name : '';
-}
+  displayClientName(id: number | null): string {
+    if (typeof id !== 'number') return '';
+    const client = this.clients.find(c => c.id === id);
+    return client ? client.name : '';
+  }
 
   formatTime(date: Date): string {
     const h = date.getHours().toString().padStart(2, '0');
@@ -146,36 +170,46 @@ displayClientName(id: number | null): string {
     return `${h}:${m}`;
   }
 
-  submit(): void {
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      return;
-    }
-    this.saving = true;
-
-    const date: Date = this.form.value.date;
-    const time: string = this.form.value.time;
-    const [hours, minutes] = time.split(':').map((v: string) => parseInt(v, 10));
-    date.setHours(hours, minutes);
-
-    const dto: Partial<Appointment> = {
-      startTime: date.toISOString(),
-      paid: this.form.value.paid,
-      clientId: this.form.value.clientId
-    };
-
-    this.service.update(this.id, dto as Appointment).subscribe({
-      next: () => {
-        this.saving = false;
-        this.snack.open('Agendamento atualizado com sucesso!', 'Fechar', { duration: 3000 });
-        this.router.navigateByUrl('/');
-      },
-      error: () => {
-        this.saving = false;
-        this.snack.open('Erro ao atualizar agendamento.', 'Fechar', { duration: 3000 });
-      }
-    });
+submit(): void {
+  if (this.form.invalid) {
+    this.form.markAllAsTouched();
+    return;
   }
+
+  this.saving = true;
+
+  const formValue = this.form.value;
+  const date: Date = new Date(formValue.date);
+  const [hours, minutes] = formValue.time.split(':').map((v: string) => parseInt(v, 10));
+  date.setHours(hours, minutes);
+
+  const status = formValue.paid ? 'COMPLETED' : 'PENDING';
+
+
+  const dto: AppointmentUpdateDTO = {
+    id: this.id,
+    startTime: date.toISOString(),
+    endTime: this.endTimeValue.toISOString(),
+    appointmentStatus: status,
+    price: this.priceValue,
+    paid: formValue.paid,
+    clientId: formValue.clientId
+  };
+
+  console.log('DTO enviado:', dto); 
+
+  this.service.update(this.id, dto).subscribe({
+    next: () => {
+      this.saving = false;
+      this.snack.open('Agendamento atualizado com sucesso!', 'Fechar', { duration: 3000 });
+      this.router.navigateByUrl('/');
+    },
+    error: () => {
+      this.saving = false;
+      this.snack.open('Erro ao atualizar agendamento.', 'Fechar', { duration: 3000 });
+    }
+  });
+}
 
   cancelar(): void {
     this.router.navigateByUrl('/');

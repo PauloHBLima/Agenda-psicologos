@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Appointment } from '../interfaces/appointment.interface';
 import { environment } from '../../environments/environment';
+import { AppointmentUpdateDTO } from '../interfaces/appointmentUpdateDTO';
 
 export interface Page<T> {
   content: T[];
@@ -53,8 +54,8 @@ console.log("lastdate:", lastDate)
     return this.http.post<Appointment>(this.apiUrl, appointment);
   }
 
-  update(id: number, appointment: Appointment): Observable<Appointment> {
-    return this.http.put<Appointment>(`${this.apiUrl}/${id}`, appointment);
+  update(id: number, dto: AppointmentUpdateDTO): Observable<Appointment> {
+    return this.http.put<Appointment>(`${this.apiUrl}/${id}`, dto);
   }
 
   delete(id: number): Observable<void> {
