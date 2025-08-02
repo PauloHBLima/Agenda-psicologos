@@ -13,6 +13,8 @@ import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { AppointmentService, Page as PageResponse } from '../../../services/appointment.service';
 import { Appointment } from '../../../interfaces/appointment.interface';
 import { ConfirmDialogComponent } from '../../../shared/confirm-dialog/confirm-dialog.component';
+import { FormatarHorarioPipe, PaymentStatusPipe } from '../../../pipes/custom-pipes';
+
 
 @Component({
   selector: 'app-listar-agendamentos',
@@ -26,7 +28,9 @@ import { ConfirmDialogComponent } from '../../../shared/confirm-dialog/confirm-d
     MatDialogModule,
     MatProgressSpinnerModule,
     MatCardModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    FormatarHorarioPipe,
+    PaymentStatusPipe
   ],
   templateUrl: './listar-agendamentos.component.html',
   styleUrls: ['./listar-agendamentos.component.scss']

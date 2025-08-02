@@ -13,17 +13,21 @@
     <p>Carregando agendamentos...</p>
   </div>
 
- <table mat-table [dataSource]="appointments" *ngIf="!loading && appointments.length > 0" class="mat-elevation-z2 w-100">
+  <table mat-table [dataSource]="appointments" *ngIf="!loading && appointments.length > 0" class="mat-elevation-z2 w-100">
 
     <ng-container matColumnDef="id">
       <th mat-header-cell *matHeaderCellDef> ID </th>
       <td mat-cell *matCellDef="let appointment"> {{ appointment.id }} </td>
     </ng-container>
 
-    <ng-container matColumnDef="startTime">
-      <th mat-header-cell *matHeaderCellDef> Data e Hora </th>
-      <td mat-cell *matCellDef="let appointment"> {{ appointment.startTime | date: 'short' }} </td>
-    </ng-container>
+   <ng-container matColumnDef="startTime">
+  <th mat-header-cell *matHeaderCellDef> Data e Hora </th>
+  <td mat-cell *matCellDef="let appointment">
+  {{ appointment.startTime | formatarHorario: appointment.endTime }}
+</td>
+</ng-container>
+
+
 
     <ng-container matColumnDef="clientId">
       <th mat-header-cell *matHeaderCellDef> Cliente ID </th>
@@ -31,11 +35,13 @@
     </ng-container>
 
     <ng-container matColumnDef="paid">
-      <th mat-header-cell *matHeaderCellDef> Pago </th>
+      <th mat-header-cell *matHeaderCellDef> Pagamento </th>
       <td mat-cell *matCellDef="let appointment">
-        <mat-icon color="primary" *ngIf="appointment.paid">check_circle</mat-icon>
-        <mat-icon color="warn" *ngIf="!appointment.paid">cancel</mat-icon>
-      </td>
+  <span [ngClass]="(appointment.paid | paymentStatus).cssClass">
+    {{ (appointment.paid | paymentStatus).text }}
+  </span>
+</td>
+
     </ng-container>
 
     <ng-container matColumnDef="actions">

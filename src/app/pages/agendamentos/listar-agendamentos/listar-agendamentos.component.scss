@@ -1,44 +1,67 @@
-.header-actions {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
+/* Estilo para o cabeçalho da tabela */
+.mat-header-row {
+  background-color: #f0d54a;  /* Sua cor amarela */
+  color: #000;
+  font-weight: 700;
+  font-size: 1rem;
 }
 
-mat-card {
-  padding: 1.5rem;
+/* Espaçamento entre linhas */
+.mat-row {
+  background-color: #fff;
+  transition: background-color 0.3s ease;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  display: table-row; /* importante para manter o layout da tabela */
+}
 
-  h2 {
-    margin-bottom: 1rem;
-  }
+/* Hover nas linhas */
+.mat-row:hover {
+  background-color: #f9f9f9;
+  cursor: pointer;
+}
 
-  table {
-    width: 100%;
-    margin-bottom: 1rem;
-  }
+/* Espaçamento entre as células */
+.mat-cell, .mat-header-cell {
+  padding: 16px 12px;
+}
 
-  mat-paginator {
-    display: flex;
-    justify-content: end; 
-    margin-top: 1rem;
-  }
+/* Cores para o status de pagamento */
+.payment-status-pago {
+  color: #155724;
+  font-weight: 600;
+  background-color: #d4edda;
+  padding: 4px 10px;
+  border-radius: 12px;
+  display: inline-block;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+}
 
-  .actions {
-    display: flex;
-    gap: 0.5rem;
-    justify-content: center;
-  }
+.payment-status-pendente {
+  color: #721c24;
+  font-weight: 600;
+  background-color: #f8d7da;
+  padding: 4px 10px;
+  border-radius: 12px;
+  display: inline-block;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+}
 
-  .text-center {
-    text-align: center;
-  }
+/* Botões de ação alinhados e espaçados */
+.actions button {
+  margin-right: 8px;
+}
 
-  .my-4 {
-    margin-top: 1.5rem;
-    margin-bottom: 1.5rem;
-  }
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 10px;
+}
 
-  .mt-4 {
-    margin-top: 1.5rem;
+@media (max-width: 600px) {
+  .actions button {
+    margin-bottom: 8px;
   }
 }
