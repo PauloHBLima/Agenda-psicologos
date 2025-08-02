@@ -36,8 +36,7 @@
         type="text"
         matInput
         [matAutocomplete]="auto"
-        [formControl]="clientIdControl"
-        [value]="displayClientName(clientIdControl.value)" />
+        [formControl]="clientIdControl" />
       <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayClientName.bind(this)">
         <mat-option *ngFor="let client of filteredClients | async" [value]="client.id">
           {{ client.name }}
@@ -48,7 +47,9 @@
       </mat-error>
     </mat-form-field>
 
-    <mat-checkbox formControlName="paid" class="mb-4">Pagamento Realizado</mat-checkbox>
+    <mat-checkbox formControlName="paid" class="mb-4">
+      Pagamento Realizado
+    </mat-checkbox>
 
     <div class="d-flex justify-content-between">
       <button mat-stroked-button color="warn" type="button" (click)="cancelar()" [disabled]="saving">

@@ -68,10 +68,19 @@ export class EditarAgendamentoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.id = Number(this.route.snapshot.paramMap.get('id'));
+    this.route.paramMap.subscribe(params => {
+      const paramId = params.get('id');
+      if (paramId) {
+        this.id = +paramId;
+        this.loadAgendamento();
+      } else {
+        this.snack.open('ID inválido!', 'Fechar', { duration: 3000 });
+        this.router.navigateByUrl('/');
+      }
+    });
 
     this.form = this.fb.group({
-      date: [null, Validators.required],  
+      date: [null, Validators.required],
       time: [null, Validators.required],
       paid: [false, Validators.required],
       clientId: [null, [Validators.required, Validators.min(1)]]
@@ -80,32 +89,40 @@ export class EditarAgendamentoComponent implements OnInit {
     this.loadClients();
 
     this.filteredClients = this.clientIdControl.valueChanges.pipe(
-      startWith(''),
-      map(value => typeof value === 'string' ? value : this.displayClientName(value)),
-      map(name => name ? this._filterClients(name) : this.clients.slice())
-    );
+    startWith(this.clientIdControl.value), 
+    map(value => typeof value === 'string' ? value : this.displayClientName(value)), 
+    map(name => name ? this._filterClients(name) : this.clients.slice())
+  );
+  }
 
+  loadAgendamento(): void {
     this.service.getById(this.id).subscribe({
       next: (data: Appointment) => {
         const start = new Date(data.startTime);
+        if (isNaN(start.getTime())) {
+          this.snack.open('Data do agendamento inválida.', 'Fechar', { duration: 3000 });
+          this.loading = false;
+          return;
+        }
+
         this.form.patchValue({
           date: start,
           time: this.formatTime(start),
           paid: data.paid,
           clientId: data.clientId
         });
+
+        this.clientIdControl.setValue(data.clientId);
         this.loading = false;
       },
-      error: (err) => {
-        console.error('Erro ao carregar agendamento:', err);
+      error: () => {
         this.snack.open('Erro ao carregar agendamento', 'Fechar', { duration: 3000 });
         this.loading = false;
       }
     });
   }
 
-  loadClients() {
-   
+  loadClients(): void {
     this.clients = [
       { id: 1, name: 'João Silva' },
       { id: 2, name: 'Maria Oliveira' },
@@ -118,10 +135,10 @@ export class EditarAgendamentoComponent implements OnInit {
     return this.clients.filter(client => client.name.toLowerCase().includes(filterValue));
   }
 
-  displayClientName(id: number): string {
-    const client = this.clients.find(c => c.id === id);
-    return client ? client.name : '';
-  }
+displayClientName(id: number | null): string {
+  const client = this.clients.find(c => c.id === id);
+  return client ? client.name : '';
+}
 
   formatTime(date: Date): string {
     const h = date.getHours().toString().padStart(2, '0');
@@ -153,9 +170,8 @@ export class EditarAgendamentoComponent implements OnInit {
         this.snack.open('Agendamento atualizado com sucesso!', 'Fechar', { duration: 3000 });
         this.router.navigateByUrl('/');
       },
-      error: (err) => {
+      error: () => {
         this.saving = false;
-        console.error('Erro ao atualizar agendamento:', err);
         this.snack.open('Erro ao atualizar agendamento.', 'Fechar', { duration: 3000 });
       }
     });
