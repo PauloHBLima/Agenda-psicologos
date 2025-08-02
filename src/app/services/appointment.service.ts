@@ -16,6 +16,9 @@ export interface Page<T> {
   providedIn: 'root'
 })
 export class AppointmentService {
+  createAppointment(appointment: Appointment) {
+    throw new Error('Method not implemented.');
+  }
   private readonly apiUrl = `${environment.apiBaseUrl}/appointments`; // ajuste se necessário
 
   constructor(private http: HttpClient) {}

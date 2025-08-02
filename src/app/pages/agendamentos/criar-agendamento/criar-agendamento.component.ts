@@ -47,7 +47,9 @@ export class CriarAgendamentoComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = this.fb.group({
-      startTime: [null, Validators.required],
+      date: [null, Validators.required],
+      startHour: ['', Validators.required],
+      endHour: ['', Validators.required],
       clientId: [null, [Validators.required, Validators.min(1)]],
       paid: [false]
     });
@@ -61,10 +63,16 @@ export class CriarAgendamentoComponent implements OnInit {
 
     this.saving = true;
 
+    const { date, startHour, endHour, clientId, paid } = this.form.value;
+
+    const startTime = this.combineDateAndTime(date, startHour);
+    const endTime = this.combineDateAndTime(date, endHour);
+
     const dto = {
-      startTime: new Date(this.form.value.startTime).toISOString(),
-      clientId: this.form.value.clientId,
-      paid: this.form.value.paid
+      startTime: startTime.toISOString(),
+      endTime: endTime.toISOString(),
+      clientId,
+      paid
     };
 
     this.service.create(dto).subscribe({
@@ -82,5 +90,14 @@ export class CriarAgendamentoComponent implements OnInit {
 
   cancelar(): void {
     this.router.navigateByUrl('/agendamentos');
+  }
+
+  private combineDateAndTime(date: Date, timeString: string): Date {
+    const [hours, minutes] = timeString.split(':').map(Number);
+    const combined = new Date(date);
+    combined.setHours(hours);
+    combined.setMinutes(minutes);
+    combined.setSeconds(0);
+    return combined;
   }
 }
