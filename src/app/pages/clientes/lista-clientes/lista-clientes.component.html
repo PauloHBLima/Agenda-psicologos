@@ -1,0 +1,38 @@
+<!-- src/app/pages/clientes/lista-clientes.component.html -->
+<mat-card class="p-4" style="max-width: 700px; margin: auto;">
+  <h2 class="mb-3">Clientes</h2>
+
+  <div class="d-flex justify-content-between align-items-center mb-3" style="gap: 16px;">
+    <mat-form-field appearance="fill" class="flex-grow-1">
+      <mat-label>Buscar por nome</mat-label>
+      <input matInput [(ngModel)]="nameFilter" (keyup.enter)="onSearch()" autocomplete="off" />
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" (click)="goToCreate()">Novo Cliente</button>
+  </div>
+
+  <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+
+  <mat-list *ngIf="!loading && clients.length > 0">
+    <mat-list-item
+      *ngFor="let client of clients"
+      (click)="editClient(client.id)"
+      style="cursor: pointer;"
+      >
+      {{ client.name }}
+    </mat-list-item>
+  </mat-list>
+
+  <div *ngIf="!loading && clients.length === 0" class="text-center my-4">
+    Nenhum cliente encontrado.
+  </div>
+
+  <mat-paginator
+    [length]="totalElements"
+    [pageSize]="size"
+    [pageIndex]="page"
+    [pageSizeOptions]="[5, 10, 20]"
+    showFirstLastButtons
+    (page)="onPageChange($event)">
+  </mat-paginator>
+</mat-card>
