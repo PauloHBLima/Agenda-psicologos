@@ -1,5 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { Client } from './services/client.service';
+
 
 const routes: Routes = [
   {
@@ -24,6 +26,24 @@ const routes: Routes = [
     loadComponent: () =>
       import('./pages/agendamentos/editar-agendamento/editar-agendamento.component')
         .then(m => m.EditarAgendamentoComponent)
+  },
+  {
+    path: 'clientes',
+    loadComponent: () =>
+      import('./pages/clientes/lista-clientes/lista-clientes.component')
+        .then(m => m.ClientListComponent)
+  },
+  {
+    path: 'clientes/formulario',
+    loadComponent: () =>
+      import('./pages/clientes/formulario-cliente/formulario-cliente.component')
+        .then(m => m.FormularioClienteComponent)
+  },
+  {
+    path: 'clientes/formulario/:id',
+    loadComponent: () =>
+      import('./pages/clientes/formulario-cliente/formulario-cliente.component')
+        .then(m => m.FormularioClienteComponent)
   },
   {
     path: '**',
