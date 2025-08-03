@@ -22,52 +22,65 @@ src/app/
 ├── components/                        # Componentes reutilizáveis
 ├── interfaces/                        # Tipagens (DTOs do backend em Java)
 ├── pages/                             # Páginas principais da aplicação
-│   └── agendamentos/
-│       ├── agendamentos/             # Componente pai da seção
-│       ├── listar-agendamentos/     # Listagem com paginação e ações (editar/excluir)
-│       ├── criar-agendamento/       # Formulário reativo de criação
-│       ├── editar-agendamento/      # Edição com autocomplete e data/hora separados
-│       ├── excluir-agendamento/     # (Rota para confirmação e lógica de exclusão)
-│       ├── novo-agendamento/        # Outro modelo de criação (teste/refatoração)
-│       ├── compromissos/            # Visualização de compromissos por cliente
-│       └── calendario/              # (Em desenvolvimento)
+│   ├── agendamentos/
+│   │   ├── agendamentos/             # Componente pai da seção
+│   │   ├── listar-agendamentos/      # Listagem com paginação e ações (editar/excluir)
+│   │   ├── criar-agendamento/        # Formulário reativo de criação
+│   │   ├── editar-agendamento/       # Edição com autocomplete e data/hora separados
+│   │   ├── excluir-agendamento/      # (Rota para confirmação e lógica de exclusão)
+│   │   ├── novo-agendamento/         # Outro modelo de criação (teste/refatoração)
+│   │   ├── compromissos/             # Visualização de compromissos por cliente
+│   │   └── calendario/               # (Em desenvolvimento)
+│   └── clientes/
+│       ├── lista-clientes/            # Listagem paginada e busca por nome
+│       └── formulario-cliente/        # Formulário de criação/edição de cliente
 ├── pipes/                            # Pipes customizados (a criar)
-├── services/                         # Serviços HTTP (ex: AppointmentService)
+├── services/                         # Serviços HTTP (ex: AppointmentService, ClientService)
 ├── shared/                           # Componentes compartilháveis entre páginas
 ├── utils/                            # Funções auxiliares e helpers
 ├── validators/                       # Validadores personalizados (a implementar)
-
 ✅ Funcionalidades Implementadas
-✅ Listagem de agendamentos com paginação, ações de edição e exclusão
+Listagem de agendamentos com paginação, ações de edição e exclusão
 
-✅ Criação de agendamento com formulário reativo e validação
+Criação de agendamento com formulário reativo e validação
 
-✅ Edição de agendamento com autocomplete e separação entre data/hora
+Edição de agendamento com autocomplete e separação entre data/hora
 
-✅ Exclusão de agendamento (rota dedicada, lógica de confirmação)
+Exclusão de agendamento (rota dedicada, lógica de confirmação)
 
-✅ Visualização de compromissos de um cliente
+Visualização de compromissos de um cliente
 
-✅ Integração com back-end Java (DTOs definidos)
+Integração com back-end Java (DTOs definidos)
 
-✅ Arquitetura standalone e modular
+Arquitetura standalone e modular
 
-✅ Design profissional com Angular Material
+Design profissional com Angular Material
 
-✅ Responsabilidade separada por pastas e arquivos
+Responsabilidade separada por pastas e arquivos
+
+Novas funcionalidades adicionadas recentemente:
+Listagem paginada de clientes com filtro por nome
+
+Formulário reativo para criação e edição de clientes
+
+Rotas configuradas para clientes: listagem, criação, edição
+
+Componentes standalone para clientes com importações Angular Material necessárias
+
+Navegação entre páginas de clientes e agendamentos integrada
 
 📅 Funcionalidades em Desenvolvimento
- Componente de calendário com visualização semanal/mensal
+Componente de calendário com visualização semanal/mensal
 
- Busca por nome do paciente com autocomplete
+Busca por nome do paciente com autocomplete
 
- Validações personalizadas (datas futuras, horários, etc.)
+Validações personalizadas (datas futuras, horários, etc.)
 
- Pipes customizados (ex: status de pagamento, formatação de CPF)
+Pipes customizados (ex: status de pagamento, formatação de CPF)
 
- Responsividade completa para dispositivos móveis
+Responsividade completa para dispositivos móveis
 
- Autenticação (login/logout) com guardas de rota
+Autenticação (login/logout) com guardas de rota
 
 💻 Como rodar o projeto
 bash
@@ -88,17 +101,17 @@ ng serve
 # Acesse no navegador
 http://localhost:4200
 🧠 Explicação Técnica
-Projeto desenvolvido com Angular 17 e componentes standalone (sem uso de módulos).
+Projeto desenvolvido com Angular 17 e componentes standalone (sem uso de módulos)
 
-Arquitetura modular e escalável, separando responsabilidades por pasta.
+Arquitetura modular e escalável, separando responsabilidades por pasta
 
-Comunicação com back-end Java por meio de DTOs tipados.
+Comunicação com back-end Java por meio de DTOs tipados
 
-Uso do Reactive Forms com validações embutidas e feedback visual.
+Uso do Reactive Forms com validações embutidas e feedback visual
 
-Componentes independentes para listagem, criação, edição e exclusão de agendamentos.
+Componentes independentes para listagem, criação, edição e exclusão de agendamentos e clientes
 
-Estilo aplicado com Angular Material e boas práticas de UI/UX.
+Estilo aplicado com Angular Material e boas práticas de UI/UX
 
 👨‍💻 Autor
 Paulo Henrique Barbosa de Lima
@@ -106,4 +119,3 @@ Desenvolvedor Front-end focado em Angular e aplicações organizadas por boas pr
 
 📌 Licença
 Este projeto está disponível para uso pessoal ou profissional, livre para modificação e adaptação conforme a necessidade.
-
