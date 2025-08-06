@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { Appointment } from '../interfaces/appointment.interface';
 import { environment } from '../../environments/environment';
 import { AppointmentUpdateDTO } from '../interfaces/appointmentUpdateDTO';
@@ -17,32 +17,32 @@ export interface Page<T> {
   providedIn: 'root'
 })
 export class AppointmentService {
-  createAppointment(appointment: Appointment) {
-    throw new Error('Method not implemented.');
-  }
   private readonly apiUrl = `${environment.apiBaseUrl}/appointments`; // ajuste se necessário
 
   constructor(private http: HttpClient) {}
 
- getAll(): Observable<Appointment[]> {
-  return this.http.get<Appointment[]>(this.apiUrl);
-}
+  getAll(): Observable<Appointment[]> {
+    return this.http.get<Appointment[]>(this.apiUrl);
+  }
 
-getAllPaginated(page: number, size: number): Observable<Page<Appointment>> {
-  const params = new HttpParams()
-    .set('page', page.toString())
-    .set('size', size.toString());
+  getAllPaginated(page: number, size: number): Observable<Page<Appointment>> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
 
-  return this.http.get<Page<Appointment>>(this.apiUrl, { params });
-}
+    return this.http.get<Page<Appointment>>(this.apiUrl, { params });
+  }
+
   getByDate(firstDate: string, lastDate: string, page = 0, size = 10): Observable<Page<Appointment>> {
     const params = new HttpParams()
       .set('firstDate', firstDate)
       .set('lastDate', lastDate)
-      .set('page', page)
-      .set('size', size);
-console.log("firstdate:", firstDate)
-console.log("lastdate:", lastDate)
+      .set('page', page.toString())
+      .set('size', size.toString());
+
+    console.log("firstDate:", firstDate);
+    console.log("lastDate:", lastDate);
+
     return this.http.get<Page<Appointment>>(`${this.apiUrl}/findByDate`, { params });
   }
 
@@ -60,5 +60,13 @@ console.log("lastdate:", lastDate)
 
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+  
+  getTotalAppointments(): Observable<number> {
+    return this.http.get<{ total: number }>(`${this.apiUrl}/total`).pipe(
+      map(response => response.total)
+    );
+
+    
   }
 }

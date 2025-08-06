@@ -1,7 +1,6 @@
-// src/app/services/client.service.ts
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 
 export interface Client {
   id?: number;
@@ -53,7 +52,14 @@ export class ClientService {
     return this.http.put<Client>(`${this.baseUrl}/${id}`, client);
   }
 
-  deleteClient(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/${id}`);
+  deleteClient(id: number) {
+    return this.http.delete(`${this.baseUrl}/${id}`);
+  }
+
+  getTotalClients(): Observable<number> {
+    return this.http.get<{ total: number }>(`${this.baseUrl}/total`).pipe(
+      map(response => response.total)
+    );
+
   }
 }
