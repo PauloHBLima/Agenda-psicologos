@@ -1,67 +1,117 @@
-/* Estilo para o cabeçalho da tabela */
-.mat-header-row {
-  background-color: #f0d54a;  /* Sua cor amarela */
-  color: #000;
-  font-weight: 700;
-  font-size: 1rem;
-}
-
-/* Espaçamento entre linhas */
-.mat-row {
+mat-card {
+  margin-top: 40px;
+  padding: 32px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
   background-color: #fff;
-  transition: background-color 0.3s ease;
-  border-radius: 6px;
-  margin-bottom: 8px;
-  display: table-row; /* importante para manter o layout da tabela */
-}
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
 
-/* Hover nas linhas */
-.mat-row:hover {
-  background-color: #f9f9f9;
-  cursor: pointer;
-}
+  h2 {
+    margin-bottom: 24px;
+    font-weight: 600;
+    text-align: center;
+  }
 
-/* Espaçamento entre as células */
-.mat-cell, .mat-header-cell {
-  padding: 16px 12px;
-}
+  .filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
 
-/* Cores para o status de pagamento */
-.payment-status-pago {
-  color: #155724;
-  font-weight: 600;
-  background-color: #d4edda;
-  padding: 4px 10px;
-  border-radius: 12px;
-  display: inline-block;
-  text-transform: uppercase;
-  font-size: 0.9rem;
-}
+    .mat-form-field {
+      min-width: 250px;
+      flex-grow: 1;
+    }
 
-.payment-status-pendente {
-  color: #721c24;
-  font-weight: 600;
-  background-color: #f8d7da;
-  padding: 4px 10px;
-  border-radius: 12px;
-  display: inline-block;
-  text-transform: uppercase;
-  font-size: 0.9rem;
-}
+    button {
+      min-width: 140px;
+    }
+  }
 
-/* Botões de ação alinhados e espaçados */
-.actions button {
-  margin-right: 8px;
-}
+  table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+  }
 
-table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0 10px;
-}
+  .mat-header-row {
+    background-color: #f0d54a;
+    color: #000;
+    font-weight: 700;
+    font-size: 1rem;
+  }
 
-@media (max-width: 600px) {
-  .actions button {
-    margin-bottom: 8px;
+  .mat-header-cell,
+  .mat-cell {
+    padding: 16px 12px;
+    text-align: center;
+  }
+
+  .mat-row {
+    background-color: #fff;
+    transition: background-color 0.3s ease;
+    border-radius: 6px;
+    display: table-row;
+  }
+
+  .mat-row:hover {
+    background-color: #f9f9f9;
+    cursor: pointer;
+  }
+
+  .payment-status-pago {
+    color: #155724;
+    font-weight: 600;
+    background-color: #d4edda;
+    padding: 4px 10px;
+    border-radius: 12px;
+    display: inline-block;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+  }
+
+  .payment-status-pendente {
+    color: #721c24;
+    font-weight: 600;
+    background-color: #f8d7da;
+    padding: 4px 10px;
+    border-radius: 12px;
+    display: inline-block;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+  }
+
+  .actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+
+    button {
+      margin: 0;
+    }
+  }
+
+  .mat-paginator {
+    margin-top: 24px;
+  }
+
+  @media (max-width: 600px) {
+    .filter-bar {
+      flex-direction: column;
+      align-items: stretch;
+
+      button {
+        width: 100%;
+      }
+    }
+
+    .actions {
+      flex-direction: column;
+      gap: 8px;
+    }
   }
 }

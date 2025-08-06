@@ -4,7 +4,6 @@
 
   <form [formGroup]="form" (ngSubmit)="submit()">
 
-    <!-- Data -->
     <mat-form-field appearance="fill" class="w-100 mb-3">
       <mat-label>Data</mat-label>
       <input matInput [matDatepicker]="picker" formControlName="date" />
@@ -15,7 +14,6 @@
       </mat-error>
     </mat-form-field>
 
-    <!-- Hora de Início -->
     <mat-form-field appearance="fill" class="w-100 mb-3">
       <mat-label>Hora de Início</mat-label>
       <input matInput type="time" formControlName="startHour" />
@@ -24,7 +22,6 @@
       </mat-error>
     </mat-form-field>
 
-    <!-- Hora de Término -->
     <mat-form-field appearance="fill" class="w-100 mb-3">
       <mat-label>Hora de Término</mat-label>
       <input matInput type="time" formControlName="endHour" />
@@ -33,7 +30,6 @@
       </mat-error>
     </mat-form-field>
 
-    <!-- Cliente -->
     <mat-form-field appearance="fill" class="w-100 mb-3">
       <mat-label>ID do Cliente</mat-label>
       <input matInput type="number" formControlName="clientId" />
@@ -45,10 +41,8 @@
       </mat-error>
     </mat-form-field>
 
-    <!-- Pagamento -->
     <mat-checkbox formControlName="paid" class="mb-4">Pagamento Realizado</mat-checkbox>
 
-    <!-- Botões -->
     <div class="d-flex justify-content-between">
       <button mat-stroked-button color="warn" type="button" (click)="cancelar()" [disabled]="saving">
         Cancelar
