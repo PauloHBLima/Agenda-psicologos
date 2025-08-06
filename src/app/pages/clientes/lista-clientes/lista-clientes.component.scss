@@ -1,0 +1,15 @@
+.listar-clientes-card {
+  max-width: 700px;
+  margin: 40px auto; // centraliza e afasta do topo
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+}
+
+mat-form-field {
+  min-width: 250px;
+}
+
+button[mat-raised-button] {
+  white-space: nowrap;
+  font-weight: 500;
+}

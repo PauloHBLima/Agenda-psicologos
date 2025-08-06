@@ -1,12 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { Client, ClientService } from '../../../services/client.service';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { Client, ClientService } from '../../../services/client.service';
+
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 @Component({
   selector: 'app-formulario-cliente',
@@ -21,6 +24,8 @@ import { MatButtonModule } from '@angular/material/button';
     MatCardModule,
     MatFormFieldModule,
     MatButtonModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
   ],
 })
 export class FormularioClienteComponent implements OnInit {
@@ -46,16 +51,16 @@ export class FormularioClienteComponent implements OnInit {
 
   buildForm() {
     this.form = this.fb.group({
-      name: ['', Validators.required],
-      cpf: [''],
+      name: ['', [Validators.required, Validators.minLength(3)]],
+      cpf: ['', [Validators.pattern(/^\d{11}$/)]],
       birthDate: [''],
-      email: [''],
-      phoneNumber: [''],
-      appointmentPrice: [''],
-      appointmentFrequency: [''],
+      email: ['', [Validators.email]],
+      phoneNumber: ['', [Validators.pattern(/^\d{10,11}$/)]],
+      appointmentPrice: [null, [Validators.min(0)]],
+      appointmentFrequency: [null, [Validators.min(1)]],
       treatmentStartDate: [''],
       treatmentEndDate: [''],
-      appointmentDurationInMinutes: [''],
+      appointmentDurationInMinutes: [null, [Validators.min(10)]],
     });
   }
 
@@ -71,21 +76,28 @@ export class FormularioClienteComponent implements OnInit {
   }
 
   submit() {
-    if (this.form.invalid) return;
-    this.saving = true;
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
+    }
 
+    this.saving = true;
     const data: Client = this.form.value;
 
-    const obs = this.clientId
+    const request = this.clientId
       ? this.service.updateClient(this.clientId, data)
       : this.service.createClient(data);
 
-    obs.subscribe({
+    request.subscribe({
       next: () => {
         this.saving = false;
         this.router.navigate(['/clientes']);
       },
       error: () => (this.saving = false),
     });
+  }
+
+  get f() {
+    return this.form.controls;
   }
 }

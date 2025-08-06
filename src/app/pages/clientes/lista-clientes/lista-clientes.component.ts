@@ -11,7 +11,11 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatListModule } from '@angular/material/list';
-import { MatCard } from "@angular/material/card";
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../../../shared/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-lista-clientes',
@@ -25,7 +29,9 @@ import { MatCard } from "@angular/material/card";
     MatButtonModule,
     MatProgressBarModule,
     MatListModule,
-    MatCard
+    MatCardModule,
+    MatIconModule,
+    MatDialogModule
 ],
 })
 export class ClientListComponent implements OnInit {
@@ -36,7 +42,11 @@ export class ClientListComponent implements OnInit {
   nameFilter = '';
   loading = false;
 
-  constructor(private service: ClientService, private router: Router) {}
+  constructor(
+    private service: ClientService,
+    private router: Router,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
     this.fetchClients();
@@ -50,7 +60,10 @@ export class ClientListComponent implements OnInit {
         this.totalElements = res.totalElements;
         this.loading = false;
       },
-      error: () => (this.loading = false),
+      error: () => {
+        this.loading = false;
+        alert('Erro ao carregar clientes. Tente novamente.');
+      },
     });
   }
 
@@ -71,5 +84,29 @@ export class ClientListComponent implements OnInit {
 
   editClient(id: number) {
     this.router.navigate(['/clientes', id]);
+  }
+
+  deleteClient(id: number, name: string) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        message: `Tem certeza que deseja excluir o cliente "${name}"?`
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loading = true;
+        this.service.deleteClient(id).subscribe({
+          next: () => {
+            alert(`Cliente "${name}" excluído com sucesso.`);
+            this.fetchClients();
+          },
+          error: () => {
+            this.loading = false;
+            alert('Erro ao excluir cliente. Tente novamente.');
+          }
+        });
+      }
+    });
   }
 }
