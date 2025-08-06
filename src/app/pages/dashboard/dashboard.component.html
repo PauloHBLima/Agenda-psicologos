@@ -1,0 +1,76 @@
+<div class="dashboard-container p-4">
+
+  <h1 class="dashboard-title mb-4">Painel Principal</h1>
+
+  <mat-grid-list cols="2" rowHeight="160px" gutterSize="24px" class="dashboard-grid mb-5">
+   
+    <mat-grid-tile>
+      <mat-card class="dashboard-card clients-card">
+        <h3>Total de Clientes</h3>
+        <div class="card-content">
+          <mat-spinner *ngIf="loadingClients" diameter="40"></mat-spinner>
+          <span *ngIf="!loadingClients" class="count">{{ totalClients }}</span>
+        </div>
+      </mat-card>
+    </mat-grid-tile>
+
+
+    <mat-grid-tile>
+      <mat-card class="dashboard-card appointments-card">
+        <h3>Total de Agendamentos</h3>
+        <div class="card-content">
+          <mat-spinner *ngIf="loadingAppointments" diameter="40"></mat-spinner>
+          <span *ngIf="!loadingAppointments" class="count">{{ totalAppointments }}</span>
+        </div>
+      </mat-card>
+    </mat-grid-tile>
+  </mat-grid-list>
+
+  <mat-grid-list cols="2" rowHeight="280px" gutterSize="24px" class="dashboard-grid mb-5">
+
+    <mat-grid-tile>
+      <mat-card class="dashboard-card chart-card">
+        <h3 class="mb-3">Clientes por Mês</h3>
+        <canvas baseChart
+          [data]="clientsChartData"
+          [options]="clientsChartOptions"
+          chartType="bar">
+        </canvas>
+      </mat-card>
+    </mat-grid-tile>
+
+    <mat-grid-tile>
+      <mat-card class="dashboard-card chart-card">
+        <h3 class="mb-3">Agendamentos por Mês</h3>
+        <canvas baseChart
+          [data]="appointmentsChartData"
+          [options]="appointmentsChartOptions"
+          chartType="line">
+        </canvas>
+      </mat-card>
+    </mat-grid-tile>
+  </mat-grid-list>
+
+  <mat-card class="p-4 actions-card">
+    <h2 class="mb-3">Acesso Rápido</h2>
+
+    <div class="actions-buttons d-flex flex-wrap justify-content-center gap-3">
+      <button mat-raised-button color="primary" routerLink="/clientes" aria-label="Listar Clientes">
+        Listar Clientes
+      </button>
+
+      <button mat-raised-button color="accent" routerLink="/agendamentos/criar" aria-label="Novo Agendamento">
+        Novo Agendamento
+      </button>
+
+      <button mat-raised-button color="accent" routerLink="/clientes/novo" aria-label="Novo Cliente">
+        Novo Cliente
+      </button>
+
+      <button mat-raised-button color="primary" routerLink="/agendamentos" aria-label="Listar Agendamentos">
+        Listar Agendamentos
+      </button>
+    </div>
+  </mat-card>
+
+</div>
