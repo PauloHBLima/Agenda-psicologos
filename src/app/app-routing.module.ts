@@ -1,13 +1,17 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { Client } from './services/client.service';
-
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'agendamentos',
+    redirectTo: 'dashboard',
     pathMatch: 'full'
+  },
+  {
+    path: 'dashboard',
+    loadComponent: () =>
+      import('./pages/dashboard/dashboard.component')
+        .then(m => m.DashboardComponent)
   },
   {
     path: 'agendamentos',
@@ -34,20 +38,20 @@ const routes: Routes = [
         .then(m => m.ClientListComponent)
   },
   {
-    path: 'clientes/formulario',
+    path: 'clientes/novo',
     loadComponent: () =>
       import('./pages/clientes/formulario-cliente/formulario-cliente.component')
         .then(m => m.FormularioClienteComponent)
   },
   {
-    path: 'clientes/formulario/:id',
+    path: 'clientes/:id',
     loadComponent: () =>
       import('./pages/clientes/formulario-cliente/formulario-cliente.component')
         .then(m => m.FormularioClienteComponent)
   },
   {
     path: '**',
-    redirectTo: 'agendamentos'
+    redirectTo: 'dashboard'
   }
 ];
 
