@@ -1,15 +1,19 @@
 .listar-clientes-card {
-  max-width: 700px;
-  margin: 40px auto; // centraliza e afasta do topo
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-  border-radius: 8px;
+  max-width: 900px; // card centralizado e não tão largo
 }
 
-mat-form-field {
-  min-width: 250px;
+.header {
+  margin-bottom: 1.5rem; // aumenta a distância entre cabeçalho e busca
 }
 
-button[mat-raised-button] {
-  white-space: nowrap;
-  font-weight: 500;
+.search-new {
+  margin-bottom: 1.5rem; // separa a barra de busca do restante da tela
+}
+
+.client-list-item {
+  padding: 0.75rem 0; // espaçamento entre clientes
+}
+
+.btn-back {
+  min-width: 120px; // botão uniforme
 }

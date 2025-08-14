@@ -1,7 +1,20 @@
 <mat-card class="p-4 mx-auto listar-clientes-card">
-  <h2 class="mb-3 text-center">Lista de Clientes</h2>
+  <!-- Cabeçalho -->
+  <div class="d-flex justify-content-between align-items-center mb-4 header">
+    <h2 class="mb-0">Lista de Clientes</h2>
+    <button
+      mat-raised-button
+      color="accent"
+      class="btn-back"
+      (click)="goToDashboard()"
+      aria-label="Voltar para o Dashboard">
+      <mat-icon class="me-1">arrow_back</mat-icon>
+      Voltar
+    </button>
+  </div>
 
-  <div class="d-flex flex-wrap gap-3 align-items-center mb-4">
+  <!-- Busca e Novo Cliente -->
+  <div class="d-flex flex-wrap gap-3 align-items-center mb-4 search-new">
     <mat-form-field appearance="fill" class="flex-grow-1">
       <mat-label>Buscar por nome</mat-label>
       <input
@@ -23,13 +36,15 @@
     </button>
   </div>
 
-  <mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+  <!-- Barra de carregamento -->
+  <mat-progress-bar *ngIf="loading" mode="indeterminate" class="mb-4"></mat-progress-bar>
 
+  <!-- Lista de clientes -->
   <mat-list *ngIf="!loading && clients.length > 0">
-    <mat-list-item *ngFor="let client of clients">
+    <mat-list-item *ngFor="let client of clients" class="client-list-item">
       <div class="d-flex justify-content-between w-100 align-items-center">
         <span
-          style="cursor: pointer;"
+          class="client-name"
           title="Editar cliente"
           (click)="editClient(client.id)">
           <mat-icon class="me-1">edit</mat-icon> {{ client.name }}
@@ -43,20 +58,22 @@
           <mat-icon>delete</mat-icon>
         </button>
       </div>
-      <mat-divider></mat-divider>
     </mat-list-item>
   </mat-list>
 
+  <!-- Mensagem caso não haja clientes -->
   <div *ngIf="!loading && clients.length === 0" class="text-center my-4 text-muted">
     Nenhum cliente encontrado.
   </div>
 
+  <!-- Paginação -->
   <mat-paginator
     [length]="totalElements"
     [pageSize]="size"
     [pageIndex]="page"
     [pageSizeOptions]="[5, 10, 20]"
     showFirstLastButtons
+    class="mt-4"
     (page)="onPageChange($event)">
   </mat-paginator>
 </mat-card>

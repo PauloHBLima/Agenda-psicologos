@@ -32,7 +32,7 @@ import { ConfirmDialogComponent } from '../../../shared/confirm-dialog/confirm-d
     MatCardModule,
     MatIconModule,
     MatDialogModule
-],
+  ],
 })
 export class ClientListComponent implements OnInit {
   clients: ClientMin[] = [];
@@ -80,6 +80,10 @@ export class ClientListComponent implements OnInit {
 
   goToCreate() {
     this.router.navigate(['/clientes/novo']);
+  }
+
+  goToDashboard() {
+    this.router.navigate(['/dashboard']);
   }
 
   editClient(id: number) {
