@@ -21,23 +21,35 @@ export interface ClientMin {
   name: string;
 }
 
+export interface Page<T> {
+  content: T[];
+  totalElements: number;
+  totalPages: number;
+  size: number;
+  number: number;
+}
+
 @Injectable({ providedIn: 'root' })
 export class ClientService {
   private baseUrl = '/api/clients';
 
   constructor(private http: HttpClient) {}
 
-  getClients(page: number = 0, size: number = 10, nameFilter?: string) {
+  getClients(
+    page: number = 0,
+    size: number = 10,
+    nameFilter?: string
+  ): Observable<Page<ClientMin>> {
     let params = new HttpParams()
       .set('page', page)
       .set('size', size);
 
     if (nameFilter) {
       params = params.set('name', nameFilter);
-      return this.http.get<any>(`${this.baseUrl}/findByName`, { params });
+      return this.http.get<Page<ClientMin>>(`${this.baseUrl}/findByName`, { params });
     }
 
-    return this.http.get<any>(this.baseUrl, { params });
+    return this.http.get<Page<ClientMin>>(this.baseUrl, { params });
   }
 
   getClient(id: number): Observable<Client> {
@@ -60,6 +72,5 @@ export class ClientService {
     return this.http.get<{ total: number }>(`${this.baseUrl}/total`).pipe(
       map(response => response.total)
     );
-
   }
 }

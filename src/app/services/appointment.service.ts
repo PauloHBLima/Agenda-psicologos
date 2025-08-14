@@ -22,8 +22,16 @@ export class AppointmentService {
   constructor(private http: HttpClient) {}
 
   getAll(): Observable<Appointment[]> {
-    return this.http.get<Appointment[]>(this.apiUrl);
-  }
+  const now = new Date();
+  const firstDate = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0).toISOString();
+  const lastDate = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59).toISOString();
+
+  const params = new HttpParams()
+    .set('firstDate', firstDate)
+    .set('lastDate', lastDate);
+
+  return this.http.get<Appointment[]>(this.apiUrl, { params });
+}
 
   getAllPaginated(page: number, size: number): Observable<Page<Appointment>> {
     const params = new HttpParams()

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormControl, NonNullableFormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Client, ClientService } from '../../../services/client.service';
-
+import { CommonModule } from '@angular/common';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCardModule } from '@angular/material/card';
@@ -17,6 +17,7 @@ import { MatNativeDateModule } from '@angular/material/core';
   styleUrls: ['./formulario-cliente.component.scss'],
   standalone: true,
   imports: [
+    CommonModule,
     RouterModule,
     ReactiveFormsModule,
     MatInputModule,
@@ -29,7 +30,19 @@ import { MatNativeDateModule } from '@angular/material/core';
   ],
 })
 export class FormularioClienteComponent implements OnInit {
-  form!: FormGroup;
+  form!: FormGroup<{
+    name: FormControl<string>;
+    cpf: FormControl<string>;
+    birthDate: FormControl<string>;
+    email: FormControl<string>;
+    phoneNumber: FormControl<string>;
+    appointmentPrice: FormControl<number | null>;
+    appointmentFrequency: FormControl<number | null>;
+    treatmentStartDate: FormControl<string>;
+    treatmentEndDate: FormControl<string>;
+    appointmentDurationInMinutes: FormControl<number | null>;
+  }>;
+
   clientId?: number;
   loading = false;
   saving = false;
@@ -51,16 +64,16 @@ export class FormularioClienteComponent implements OnInit {
 
   buildForm() {
     this.form = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(3)]],
-      cpf: ['', [Validators.pattern(/^\d{11}$/)]],
-      birthDate: [''],
-      email: ['', [Validators.email]],
-      phoneNumber: ['', [Validators.pattern(/^\d{10,11}$/)]],
-      appointmentPrice: [null, [Validators.min(0)]],
-      appointmentFrequency: [null, [Validators.min(1)]],
-      treatmentStartDate: [''],
-      treatmentEndDate: [''],
-      appointmentDurationInMinutes: [null, [Validators.min(10)]],
+      name: this.fb.nonNullable.control('', [Validators.required, Validators.minLength(3)]),
+      cpf: this.fb.nonNullable.control('', [Validators.pattern(/^\d{11}$/)]),
+      birthDate: this.fb.nonNullable.control(''),
+      email: this.fb.nonNullable.control('', [Validators.email]),
+      phoneNumber: this.fb.nonNullable.control('', [Validators.pattern(/^\d{10,11}$/)]),
+      appointmentPrice: this.fb.control<number | null>(null, [Validators.min(0)]),
+      appointmentFrequency: this.fb.control<number | null>(null, [Validators.min(1)]),
+      treatmentStartDate: this.fb.nonNullable.control(''),
+      treatmentEndDate: this.fb.nonNullable.control(''),
+      appointmentDurationInMinutes: this.fb.control<number | null>(null, [Validators.min(10)]),
     });
   }
 
@@ -82,7 +95,7 @@ export class FormularioClienteComponent implements OnInit {
     }
 
     this.saving = true;
-    const data: Client = this.form.value;
+    const data: Client = this.form.getRawValue() as Client;
 
     const request = this.clientId
       ? this.service.updateClient(this.clientId, data)
