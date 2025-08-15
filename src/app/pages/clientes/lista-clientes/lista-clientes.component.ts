@@ -1,21 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { ClientMin, ClientService } from '../../../services/client.service';
+import { Client, ClientService } from '../../../services/client.service';
 import { PageEvent } from '@angular/material/paginator';
 import { Router } from '@angular/router';
 
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MatListModule } from '@angular/material/list';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../../shared/confirm-dialog/confirm-dialog.component';
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 
 @Component({
   selector: 'app-lista-clientes',
@@ -27,15 +24,14 @@ import { ConfirmDialogComponent } from '../../../shared/confirm-dialog/confirm-d
     MatPaginatorModule,
     MatInputModule,
     MatButtonModule,
-    MatProgressBarModule,
-    MatListModule,
     MatCardModule,
     MatIconModule,
-    MatDialogModule
+    MatDialogModule,
+    MatProgressSpinnerModule
   ],
 })
 export class ClientListComponent implements OnInit {
-  clients: ClientMin[] = [];
+  clients: Client[] = [];
   totalElements = 0;
   page = 0;
   size = 10;
@@ -54,7 +50,7 @@ export class ClientListComponent implements OnInit {
 
   fetchClients() {
     this.loading = true;
-    this.service.getClients(this.page, this.size, this.nameFilter).subscribe({
+    this.service.getClientsFull(this.page, this.size, this.nameFilter).subscribe({
       next: (res) => {
         this.clients = res.content;
         this.totalElements = res.totalElements;
@@ -74,6 +70,12 @@ export class ClientListComponent implements OnInit {
   }
 
   onSearch() {
+    this.page = 0;
+    this.fetchClients();
+  }
+
+  clearSearch() {
+    this.nameFilter = '';
     this.page = 0;
     this.fetchClients();
   }
