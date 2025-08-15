@@ -1,49 +1,61 @@
-<mat-card class="p-4">
+<mat-card class="p-4 mx-auto" style="max-width: 900px;">
 
-  <h2 class="mb-4">Criar Novo Agendamento</h2>
+  <!-- Cabeçalho -->
+  <div class="header">
+    <h2>Criar Novo Agendamento</h2>
+  </div>
 
   <form [formGroup]="form" (ngSubmit)="submit()">
 
-    <mat-form-field appearance="fill" class="w-100 mb-3">
-      <mat-label>Data</mat-label>
-      <input matInput [matDatepicker]="picker" formControlName="date" />
-      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
-      <mat-error *ngIf="form.get('date')?.invalid && (form.get('date')?.touched || form.get('date')?.dirty)">
-        Data obrigatória
-      </mat-error>
-    </mat-form-field>
+    <!-- Agrupando Data e Hora em um bloco visual -->
+    <div class="filter-bar">
+      <div class="date-group">
+        <mat-form-field appearance="fill">
+          <mat-label>Data</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="date" placeholder="dd/mm/aaaa" />
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker startView="month"></mat-datepicker>
+          <mat-error *ngIf="form.get('date')?.invalid && (form.get('date')?.touched || form.get('date')?.dirty)">
+            Data obrigatória
+          </mat-error>
+        </mat-form-field>
 
-    <mat-form-field appearance="fill" class="w-100 mb-3">
-      <mat-label>Hora de Início</mat-label>
-      <input matInput type="time" formControlName="startHour" />
-      <mat-error *ngIf="form.get('startHour')?.invalid && (form.get('startHour')?.touched || form.get('startHour')?.dirty)">
-        Hora obrigatória
-      </mat-error>
-    </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Hora de Início</mat-label>
+          <input matInput type="time" formControlName="startHour" />
+          <mat-error *ngIf="form.get('startHour')?.invalid && (form.get('startHour')?.touched || form.get('startHour')?.dirty)">
+            Hora obrigatória
+          </mat-error>
+        </mat-form-field>
 
-    <mat-form-field appearance="fill" class="w-100 mb-3">
-      <mat-label>Hora de Término</mat-label>
-      <input matInput type="time" formControlName="endHour" />
-      <mat-error *ngIf="form.get('endHour')?.invalid && (form.get('endHour')?.touched || form.get('endHour')?.dirty)">
-        Hora obrigatória
-      </mat-error>
-    </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Hora de Término</mat-label>
+          <input matInput type="time" formControlName="endHour" />
+          <mat-error *ngIf="form.get('endHour')?.invalid && (form.get('endHour')?.touched || form.get('endHour')?.dirty)">
+            Hora obrigatória
+          </mat-error>
+        </mat-form-field>
+      </div>
 
-    <mat-form-field appearance="fill" class="w-100 mb-3">
-      <mat-label>ID do Cliente</mat-label>
-      <input matInput type="number" formControlName="clientId" />
-      <mat-error *ngIf="form.get('clientId')?.hasError('required') && (form.get('clientId')?.touched || form.get('clientId')?.dirty)">
-        Cliente é obrigatório
-      </mat-error>
-      <mat-error *ngIf="form.get('clientId')?.hasError('min') && (form.get('clientId')?.touched || form.get('clientId')?.dirty)">
-        ID inválido
-      </mat-error>
-    </mat-form-field>
+      <!-- Cliente e Pagamento -->
+      <div class="date-group">
+        <mat-form-field appearance="fill">
+          <mat-label>ID do Cliente</mat-label>
+          <input matInput type="number" formControlName="clientId" />
+          <mat-error *ngIf="form.get('clientId')?.hasError('required') && (form.get('clientId')?.touched || form.get('clientId')?.dirty)">
+            Cliente é obrigatório
+          </mat-error>
+          <mat-error *ngIf="form.get('clientId')?.hasError('min') && (form.get('clientId')?.touched || form.get('clientId')?.dirty)">
+            ID inválido
+          </mat-error>
+        </mat-form-field>
 
-    <mat-checkbox formControlName="paid" class="mb-4">Pagamento Realizado</mat-checkbox>
+        <mat-checkbox formControlName="paid" class="align-self-center">Pagamento Realizado</mat-checkbox>
+      </div>
+    </div>
 
-    <div class="d-flex justify-content-between">
+    <!-- Botões -->
+    <div class="actions-group d-flex justify-content-end mt-4">
       <button mat-stroked-button color="warn" type="button" (click)="cancelar()" [disabled]="saving">
         Cancelar
       </button>

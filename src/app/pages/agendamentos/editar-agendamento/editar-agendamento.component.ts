@@ -8,24 +8,37 @@ import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
-import { MatSelectModule } from '@angular/material/select';
+import { MatNativeDateModule, DateAdapter, MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatCardModule } from '@angular/material/card';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatIconModule } from '@angular/material/icon';
 
 import { Observable, of } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { AppointmentUpdateDTO } from '../../../interfaces/appointmentUpdateDTO';
-import { MatIconModule } from '@angular/material/icon';
+
+import * as _moment from 'moment';
+import { default as _rollupMoment, Moment } from 'moment';
+const moment = _rollupMoment || _moment;
 
 interface Client {
   id: number;
   name: string;
 }
+
+export const MY_DATE_FORMATS = {
+  parse: { dateInput: 'DD/MM/YYYY' },
+  display: {
+    dateInput: 'dd/MM/yyyy',
+    monthYearLabel: 'MMMM yyyy',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM yyyy'
+  }
+};
 
 @Component({
   standalone: true,
@@ -39,14 +52,17 @@ interface Client {
     MatInputModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatSelectModule,
     MatButtonModule,
     MatCheckboxModule,
     MatCardModule,
     MatSnackBarModule,
     MatProgressSpinnerModule,
     MatAutocompleteModule,
-    MatIconModule,
+    MatIconModule
+  ],
+  providers: [
+    { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' },
+    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS }
   ]
 })
 export class EditarAgendamentoComponent implements OnInit {
@@ -59,8 +75,6 @@ export class EditarAgendamentoComponent implements OnInit {
   clients: Client[] = [];
   filteredClients: Observable<Client[]> = of([]);
 
-  endTimeValue!: Date;
-  appointmentStatusValue!: string;
   priceValue!: number | null;
 
   constructor(
@@ -68,7 +82,8 @@ export class EditarAgendamentoComponent implements OnInit {
     private route: ActivatedRoute,
     private service: AppointmentService,
     private router: Router,
-    private snack: MatSnackBar
+    private snack: MatSnackBar,
+    private adapter: DateAdapter<any>
   ) {}
 
   get clientIdControl(): FormControl {
@@ -76,10 +91,12 @@ export class EditarAgendamentoComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.adapter.setLocale('pt-BR');
+
     this.form = this.fb.group({
       date: [null, Validators.required],
-      time: [null, Validators.required],
-      endTime: [null, Validators.required],  // Novo controle para hora término
+      startHour: [null, Validators.required],
+      endHour: [null, Validators.required],
       paid: [false, Validators.required],
       clientId: [null, [Validators.required, Validators.min(1)]]
     });
@@ -106,29 +123,27 @@ export class EditarAgendamentoComponent implements OnInit {
     );
   }
 
+  private formatDateRange(date: Date, hour: string): Date {
+    const [h, m] = hour.split(':').map(Number);
+    const dt = moment(date).hours(h).minutes(m).seconds(0).toDate();
+    return dt;
+  }
+
   loadAgendamento(): void {
     this.service.getById(this.id).subscribe({
       next: (data: Appointment) => {
         const start = new Date(data.startTime);
-        if (isNaN(start.getTime())) {
-          this.snack.open('Data do agendamento inválida.', 'Fechar', { duration: 3000 });
-          this.loading = false;
-          return;
-        }
+        const end = new Date(data.endTime);
 
-        this.endTimeValue = new Date(data.endTime);
-        this.appointmentStatusValue = data.appointmentStatus;
         this.priceValue = data.price ?? null;
 
         this.form.patchValue({
           date: start,
-          time: this.formatTime(start),
-          endTime: this.formatTime(this.endTimeValue),  // Ajusta o valor do fim
+          startHour: this.formatTime(start),
+          endHour: this.formatTime(end),
           paid: data.paid,
           clientId: data.clientId
         });
-
-        this.clientIdControl.setValue(data.clientId);
 
         this.loading = false;
       },
@@ -164,10 +179,8 @@ export class EditarAgendamentoComponent implements OnInit {
     return `${h}:${m}`;
   }
 
-  // ** Método solicitado: **
   onClientSelected(event: MatAutocompleteSelectedEvent) {
-    const selectedClientId = event.option.value;
-    this.form.get('clientId')?.setValue(selectedClientId);
+    this.form.get('clientId')?.setValue(event.option.value);
   }
 
   submit(): void {
@@ -180,13 +193,8 @@ export class EditarAgendamentoComponent implements OnInit {
 
     const formValue = this.form.value;
 
-    const startDate: Date = new Date(formValue.date);
-    const [startHours, startMinutes] = formValue.time.split(':').map((v: string) => parseInt(v, 10));
-    startDate.setHours(startHours, startMinutes);
-
-    const endDate: Date = new Date(formValue.date);
-    const [endHours, endMinutes] = formValue.endTime.split(':').map((v: string) => parseInt(v, 10));
-    endDate.setHours(endHours, endMinutes);
+    const startDate = this.formatDateRange(formValue.date, formValue.startHour);
+    const endDate = this.formatDateRange(formValue.date, formValue.endHour);
 
     const status = formValue.paid ? 'COMPLETED' : 'PENDING';
 
@@ -206,7 +214,7 @@ export class EditarAgendamentoComponent implements OnInit {
       next: () => {
         this.saving = false;
         this.snack.open('Agendamento atualizado com sucesso!', 'Fechar', { duration: 3000 });
-        this.router.navigateByUrl('/');
+        this.router.navigateByUrl('/agendamentos');
       },
       error: () => {
         this.saving = false;
@@ -216,6 +224,6 @@ export class EditarAgendamentoComponent implements OnInit {
   }
 
   cancelar(): void {
-    this.router.navigateByUrl('/');
+    this.router.navigateByUrl('/agendamentos');
   }
 }

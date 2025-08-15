@@ -3,11 +3,11 @@ import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
-
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
+import { MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/material/core';
+import { MatMomentDateModule, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatCardModule } from '@angular/material/card';
@@ -15,6 +15,18 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { AppointmentService } from '../../../services/appointment.service';
+import moment from 'moment';
+
+// Formato de data DD/MM/YYYY
+export const MY_DATE_FORMATS = {
+  parse: { dateInput: 'DD/MM/YYYY' },
+  display: {
+    dateInput: 'DD/MM/YYYY',
+    monthYearLabel: 'MMMM YYYY',
+    dateA11yLabel: 'DD/MM/YYYY',
+    monthYearA11yLabel: 'MMMM YYYY'
+  }
+};
 
 @Component({
   selector: 'app-criar-agendamento',
@@ -25,7 +37,7 @@ import { AppointmentService } from '../../../services/appointment.service';
     MatFormFieldModule,
     MatInputModule,
     MatDatepickerModule,
-    MatNativeDateModule,
+    MatMomentDateModule,
     MatButtonModule,
     MatCheckboxModule,
     MatCardModule,
@@ -33,7 +45,12 @@ import { AppointmentService } from '../../../services/appointment.service';
     MatProgressSpinnerModule,
   ],
   templateUrl: './criar-agendamento.component.html',
-  styleUrls: ['./criar-agendamento.component.scss']
+  styleUrls: ['./criar-agendamento.component.scss'],
+  providers: [
+    { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' },
+    { provide: MAT_DATE_FORMATS, useValue: MY_DATE_FORMATS },
+    { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: false } },
+  ]
 })
 export class CriarAgendamentoComponent implements OnInit {
   form!: FormGroup;
@@ -95,10 +112,7 @@ export class CriarAgendamentoComponent implements OnInit {
 
   private combineDateAndTime(date: Date, timeString: string): Date {
     const [hours, minutes] = timeString.split(':').map(Number);
-    const combined = new Date(date);
-    combined.setHours(hours);
-    combined.setMinutes(minutes);
-    combined.setSeconds(0);
+    const combined = moment(date).hours(hours).minutes(minutes).seconds(0).toDate();
     return combined;
   }
 }

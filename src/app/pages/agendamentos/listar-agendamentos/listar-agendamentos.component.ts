@@ -10,9 +10,13 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule, MAT_DATE_LOCALE, DateAdapter, MAT_DATE_FORMATS, NativeDateAdapter } from '@angular/material/core';
+import { MatNativeDateModule, MAT_DATE_LOCALE, DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatInputModule } from '@angular/material/input';
+import * as _moment from 'moment';
+import { default as _rollupMoment } from 'moment';
+
+const moment = _rollupMoment || _moment;
 
 export const MY_DATE_FORMATS = {
   parse: { dateInput: 'DD/MM/YYYY' },
@@ -66,18 +70,22 @@ export class ListarAgendamentosComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.adapter.setLocale('pt-BR'); 
+    this.adapter.setLocale('pt-BR');
     this.loadAppointments();
   }
 
+private formatDateRange(start: Date, end: Date): { startISO: string; endISO: string } {
+  const startISO = moment(start).startOf('day').toISOString();
+  const endISO = moment(end).endOf('day').toISOString();
+  return { startISO, endISO };
+}
   loadAppointments(): void {
     this.loading = true;
 
     if (this.startDate && this.endDate) {
-      const firstDate = this.startDate.toISOString();
-      const lastDate = this.endDate.toISOString();
+      const { startISO, endISO } = this.formatDateRange(this.startDate, this.endDate);
 
-      this.service.getByDate(firstDate, lastDate, this.page, this.size).subscribe({
+      this.service.getByDate(startISO, endISO, this.page, this.size).subscribe({
         next: (data: Page<Appointment>) => {
           this.appointments = data.content;
           this.totalElements = data.totalElements;
@@ -119,10 +127,15 @@ export class ListarAgendamentosComponent implements OnInit {
     this.router.navigate(['/agendamentos/criar']);
   }
 
+  voltarParaHome(): void {
+  this.router.navigate(['/']);
+}
+
   editar(id: number): void {
     this.router.navigate(['/agendamentos/editar', id]);
   }
 
   excluir(id: number): void {
+    // implementar exclusão
   }
 }

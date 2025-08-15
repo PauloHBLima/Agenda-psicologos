@@ -1,35 +1,38 @@
-<mat-card class="p-4 mx-auto" style="max-width: 900px;">
-  <div class="header">
-    <h2 class="mb-0">Lista de Agendamentos</h2>
-    <button mat-raised-button color="primary" (click)="novoAgendamento()">
-      <mat-icon class="me-1">add</mat-icon>
-      Novo Agendamento
-    </button>
+<mat-card class="p-4 mx-auto card-wrapper">
+  <div class="header mb-3">
+    <h2>Lista de Agendamentos</h2>
+    <div class="buttons-group">
+      <button mat-stroked-button color="accent" (click)="voltarParaHome()">
+        <mat-icon>home</mat-icon>
+        Início
+      </button>
+      <button mat-raised-button color="primary" (click)="novoAgendamento()">
+        <mat-icon>add</mat-icon>
+        Novo Agendamento
+      </button>
+    </div>
   </div>
 
-  <div class="filter-bar">
-    <div class="date-group card-highlight p-3">
-      <mat-form-field>
-        <mat-label>Data Inicial</mat-label>
-        <input matInput [matDatepicker]="pickerStart" [(ngModel)]="startDate" placeholder="dd/mm/aaaa">
-        <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
-        <mat-datepicker #pickerStart startView="month"></mat-datepicker>
-      </mat-form-field>
+  <div class="filter-bar mb-3">
+    <mat-form-field>
+      <mat-label>Data Inicial</mat-label>
+      <input matInput [matDatepicker]="pickerStart" [(ngModel)]="startDate" placeholder="dd/mm/aaaa">
+      <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
+      <mat-datepicker #pickerStart></mat-datepicker>
+    </mat-form-field>
 
-      <mat-form-field>
-        <mat-label>Data Final</mat-label>
-        <input matInput [matDatepicker]="pickerEnd" [(ngModel)]="endDate" placeholder="dd/mm/aaaa">
-        <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
-        <mat-datepicker #pickerEnd startView="month"></mat-datepicker>
-      </mat-form-field>
-    </div>
+    <mat-form-field>
+      <mat-label>Data Final</mat-label>
+      <input matInput [matDatepicker]="pickerEnd" [(ngModel)]="endDate" placeholder="dd/mm/aaaa">
+      <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
+      <mat-datepicker #pickerEnd></mat-datepicker>
+    </mat-form-field>
 
     <div class="actions-group">
       <button mat-raised-button color="primary" (click)="applyFilter()">
         <mat-icon>search</mat-icon>
         Filtrar
       </button>
-
       <button mat-stroked-button color="warn" (click)="limparFiltro()">
         <mat-icon>clear</mat-icon>
         Limpar
@@ -37,42 +40,27 @@
     </div>
   </div>
 
-  <table mat-table [dataSource]="appointments" class="mat-elevation-z1 w-100" *ngIf="appointments.length > 0">
-    <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef> ID </th>
-      <td mat-cell *matCellDef="let a"> {{ a.id }} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="startTime">
-      <th mat-header-cell *matHeaderCellDef> Data e Hora </th>
-      <td mat-cell *matCellDef="let a"> {{ a.startTime | date:'dd/MM/yyyy HH:mm' }} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="clientId">
-      <th mat-header-cell *matHeaderCellDef> Cliente ID </th>
-      <td mat-cell *matCellDef="let a"> {{ a.clientId }} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="paid">
-      <th mat-header-cell *matHeaderCellDef> Pagamento </th>
-      <td mat-cell *matCellDef="let a"> {{ a.paid ? 'Pago' : 'Pendente' }} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="actions">
-      <th mat-header-cell *matHeaderCellDef> Ações </th>
-      <td mat-cell *matCellDef="let a" class="d-flex gap-2">
+  <div class="appointments-list">
+    <div *ngFor="let a of appointments" class="appointment-card">
+      <div class="info">
+        <span class="label">ID:</span> {{ a.id }}
+        <span class="label">Data/Hora:</span> {{ a.startTime | date:'dd/MM/yyyy HH:mm' }}
+        <span class="label">Cliente:</span> {{ a.clientId }}
+        <span class="label">Pagamento:</span> 
+        <span [ngClass]="a.paid ? 'payment-status-pago' : 'payment-status-pendente'">
+          {{ a.paid ? 'Pago' : 'Pendente' }}
+        </span>
+      </div>
+      <div class="actions">
         <button mat-icon-button color="primary" (click)="editar(a.id)">
           <mat-icon>edit</mat-icon>
         </button>
         <button mat-icon-button color="warn" (click)="excluir(a.id)">
           <mat-icon>delete</mat-icon>
         </button>
-      </td>
-    </ng-container>
-
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-  </table>
+      </div>
+    </div>
+  </div>
 
   <mat-paginator
     [length]="totalElements"
@@ -83,12 +71,12 @@
     (page)="onPageChange($event)">
   </mat-paginator>
 
-  <div *ngIf="!appointments.length && !loading" class="text-center mt-4 text-muted">
+  <div *ngIf="!appointments.length && !loading" class="no-data">
     Nenhum agendamento encontrado.
   </div>
 
-  <div *ngIf="loading" class="text-center my-4">
-    <mat-spinner diameter="50"></mat-spinner>
+  <div *ngIf="loading" class="loading">
+    <mat-spinner diameter="40"></mat-spinner>
     <p>Carregando agendamentos...</p>
   </div>
 </mat-card>

@@ -1,6 +1,8 @@
-<mat-card class="p-4">
+<mat-card class="p-4 mx-auto" style="max-width: 900px;">
 
-  <h2 class="mb-4">Editar Agendamento</h2>
+  <div class="header mb-4">
+    <h2 class="mb-0">Editar Agendamento</h2>
+  </div>
 
   <div *ngIf="loading" class="text-center p-4">
     <mat-spinner diameter="40"></mat-spinner>
@@ -9,35 +11,40 @@
 
   <form *ngIf="!loading" [formGroup]="form" (ngSubmit)="submit()">
 
-    <div class="d-flex mb-3">
-      
-      <mat-form-field appearance="fill" class="flex-grow-1 me-2">
-        <mat-label>Data</mat-label>
-        <input matInput [matDatepicker]="picker" formControlName="date" />
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
-        <mat-error *ngIf="form.get('date')?.invalid && (form.get('date')?.touched || form.get('date')?.dirty)">
-          Data obrigatória
-        </mat-error>
-      </mat-form-field>
+    <!-- Agrupando Data e Hora -->
+    <div class="filter-bar mb-3">
+      <div class="date-group w-100">
 
-      <mat-form-field appearance="fill" style="width: 120px;">
-        <mat-label>Hora Início</mat-label>
-        <input matInput type="time" formControlName="time" />
-        <mat-error *ngIf="form.get('time')?.invalid && (form.get('time')?.touched || form.get('time')?.dirty)">
-          Hora obrigatória
-        </mat-error>
-      </mat-form-field>
+        <mat-form-field appearance="fill" class="flex-grow-1">
+          <mat-label>Data</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="date" placeholder="dd/mm/aaaa" />
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker startView="month"></mat-datepicker>
+          <mat-error *ngIf="form.get('date')?.invalid && (form.get('date')?.touched || form.get('date')?.dirty)">
+            Data obrigatória
+          </mat-error>
+        </mat-form-field>
 
-      <mat-form-field appearance="fill" style="width: 120px; margin-left: 1rem;">
-        <mat-label>Hora Término</mat-label>
-        <input matInput type="time" formControlName="endTime" />
-        <mat-error *ngIf="form.get('endTime')?.invalid && (form.get('endTime')?.touched || form.get('endTime')?.dirty)">
-          Hora de término obrigatória
-        </mat-error>
-      </mat-form-field>
+        <mat-form-field appearance="fill" style="width: 120px;">
+          <mat-label>Hora Início</mat-label>
+          <input matInput type="time" formControlName="startHour" />
+          <mat-error *ngIf="form.get('startHour')?.invalid && (form.get('startHour')?.touched || form.get('startHour')?.dirty)">
+            Hora obrigatória
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" style="width: 120px;">
+          <mat-label>Hora Término</mat-label>
+          <input matInput type="time" formControlName="endHour" />
+          <mat-error *ngIf="form.get('endHour')?.invalid && (form.get('endHour')?.touched || form.get('endHour')?.dirty)">
+            Hora de término obrigatória
+          </mat-error>
+        </mat-form-field>
+
+      </div>
     </div>
 
+    <!-- Cliente -->
     <mat-form-field appearance="fill" class="w-100 mb-3">
       <mat-label>Cliente</mat-label>
       <input
@@ -56,11 +63,13 @@
       </mat-error>
     </mat-form-field>
 
+    <!-- Pagamento -->
     <mat-checkbox formControlName="paid" class="mb-4">
       Pagamento Realizado
     </mat-checkbox>
 
-    <div class="d-flex justify-content-between">
+    <!-- Botões -->
+    <div class="actions d-flex justify-content-between">
       <button mat-stroked-button color="warn" type="button" (click)="cancelar()" [disabled]="saving">
         Cancelar
       </button>
@@ -72,4 +81,5 @@
     </div>
 
   </form>
+
 </mat-card>
