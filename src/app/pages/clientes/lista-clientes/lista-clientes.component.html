@@ -1,79 +1,86 @@
-<mat-card class="p-4 mx-auto listar-clientes-card">
+<mat-card class="card-wrapper listar-clientes-card">
   <!-- Cabeçalho -->
-  <div class="d-flex justify-content-between align-items-center mb-4 header">
-    <h2 class="mb-0">Lista de Clientes</h2>
-    <button
-      mat-raised-button
-      color="accent"
-      class="btn-back"
-      (click)="goToDashboard()"
-      aria-label="Voltar para o Dashboard">
-      <mat-icon class="me-1">arrow_back</mat-icon>
-      Voltar
-    </button>
+  <div class="header mb-3">
+    <h2>Lista de Clientes</h2>
+    <div class="buttons-group">
+      <button mat-stroked-button color="accent" (click)="goToDashboard()">
+        <mat-icon>home</mat-icon>
+        Início
+      </button>
+      <button mat-raised-button color="primary" (click)="goToCreate()">
+        <mat-icon>person_add</mat-icon>
+        Novo Cliente
+      </button>
+    </div>
   </div>
 
-  <!-- Busca e Novo Cliente -->
-  <div class="d-flex flex-wrap gap-3 align-items-center mb-4 search-new">
-    <mat-form-field appearance="fill" class="flex-grow-1">
+  <!-- Barra de busca -->
+  <div class="filter-bar mb-3">
+    <mat-form-field appearance="fill">
       <mat-label>Buscar por nome</mat-label>
-      <input
-        matInput
-        [(ngModel)]="nameFilter"
-        (keyup.enter)="onSearch()"
-        autocomplete="off"
-        placeholder="Digite o nome do cliente"
-      />
+      <input matInput [(ngModel)]="nameFilter" (keyup.enter)="onSearch()" placeholder="Digite o nome do cliente" autocomplete="off"/>
     </mat-form-field>
-
-    <button
-      mat-raised-button
-      color="primary"
-      (click)="goToCreate()"
-      aria-label="Criar novo cliente">
-      <mat-icon class="me-1">person_add</mat-icon>
-      Novo Cliente
-    </button>
+    <div class="actions-group">
+      <button mat-raised-button color="primary" (click)="onSearch()">
+        <mat-icon>search</mat-icon> Buscar
+      </button>
+      <button mat-stroked-button color="warn" (click)="clearSearch()">
+        <mat-icon>clear</mat-icon> Limpar
+      </button>
+    </div>
   </div>
-
-  <!-- Barra de carregamento -->
-  <mat-progress-bar *ngIf="loading" mode="indeterminate" class="mb-4"></mat-progress-bar>
 
   <!-- Lista de clientes -->
-  <mat-list *ngIf="!loading && clients.length > 0">
-    <mat-list-item *ngFor="let client of clients" class="client-list-item">
-      <div class="d-flex justify-content-between w-100 align-items-center">
-        <span
-          class="client-name"
-          title="Editar cliente"
-          (click)="editClient(client.id)">
-          <mat-icon class="me-1">edit</mat-icon> {{ client.name }}
-        </span>
+  <div class="clients-list">
+    <div *ngIf="!loading && clients.length > 0">
+      <div *ngFor="let client of clients" class="client-card">
+        <div class="info">
+          <span class="label">Nome:</span>
+          <span class="clickable" (click)="editClient(client.id!)">{{ client.name }}</span>
 
-        <button
-          mat-icon-button
-          color="warn"
-          (click)="deleteClient(client.id, client.name)"
-          aria-label="Excluir cliente">
-          <mat-icon>delete</mat-icon>
-        </button>
+          <span class="label">CPF:</span> {{ client.cpf }}
+          <span class="label">Nascimento:</span> {{ client.birthDate | date:'dd/MM/yyyy' }}
+          <span class="label">Email:</span> {{ client.email }}
+          <span class="label">Telefone:</span> {{ client.phoneNumber }}
+          <span class="label">Valor Consulta:</span> {{ client.appointmentPrice | currency }}
+          <span class="label">Frequência (dias):</span> {{ client.appointmentFrequency }}
+          <span class="label">Início Tratamento:</span> {{ client.treatmentStartDate | date:'dd/MM/yyyy HH:mm' }}
+          <span class="label">Fim Tratamento:</span> {{ client.treatmentEndDate | date:'dd/MM/yyyy HH:mm' }}
+          <span class="label">Duração Sessão (min):</span> {{ client.appointmentDurationInMinutes }}
+        </div>
+
+        <div class="actions">
+          <button mat-icon-button color="primary" (click)="editClient(client.id!)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="deleteClient(client.id!, client.name)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
       </div>
-    </mat-list-item>
-  </mat-list>
+    </div>
 
-  <!-- Mensagem caso não haja clientes -->
-  <div *ngIf="!loading && clients.length === 0" class="text-center my-4 text-muted">
-    Nenhum cliente encontrado.
+    <!-- Sem clientes -->
+    <div *ngIf="!loading && clients.length === 0" class="no-data">
+      Nenhum cliente encontrado.
+    </div>
+
+    <!-- Carregando -->
+    <div *ngIf="loading" class="loading">
+      <mat-spinner diameter="40"></mat-spinner>
+      <p>Carregando clientes...</p>
+    </div>
   </div>
 
-  <!-- Paginação -->
-  <mat-paginator
-    [length]="totalElements"
-    [pageSize]="size"
-    [pageIndex]="page"
-    [pageSizeOptions]="[5, 10, 20]"
-    showFirstLastButtons
-    class="mt-4"
-    (page)="onPageChange($event)">
-  </mat-paginator>
+  <!-- Paginação centralizada -->
+  <div class="paginator-container">
+    <mat-paginator
+      [length]="totalElements"
+      [pageSize]="size"
+      [pageIndex]="page"
+      [pageSizeOptions]="[5, 10, 20]"
+      showFirstLastButtons
+      (page)="onPageChange($event)">
+    </mat-paginator>
+  </div>
 </mat-card>
