@@ -35,21 +35,22 @@ export class ClientService {
 
   constructor(private http: HttpClient) {}
 
-  getClients(
+  // Novo método que retorna os clientes com todos os campos
+  getClientsFull(
     page: number = 0,
     size: number = 10,
     nameFilter?: string
-  ): Observable<Page<ClientMin>> {
+  ): Observable<Page<Client>> {
     let params = new HttpParams()
       .set('page', page)
       .set('size', size);
 
     if (nameFilter) {
       params = params.set('name', nameFilter);
-      return this.http.get<Page<ClientMin>>(`${this.baseUrl}/findByName`, { params });
+      return this.http.get<Page<Client>>(`${this.baseUrl}/findByName`, { params });
     }
 
-    return this.http.get<Page<ClientMin>>(this.baseUrl, { params });
+    return this.http.get<Page<Client>>(this.baseUrl, { params });
   }
 
   getClient(id: number): Observable<Client> {
