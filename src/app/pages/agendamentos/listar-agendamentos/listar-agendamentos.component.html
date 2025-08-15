@@ -1,5 +1,4 @@
 <mat-card class="p-4 mx-auto" style="max-width: 900px;">
-  <!-- Cabeçalho com título e botão de criar novo agendamento -->
   <div class="header">
     <h2 class="mb-0">Lista de Agendamentos</h2>
     <button mat-raised-button color="primary" (click)="novoAgendamento()">
@@ -8,9 +7,7 @@
     </button>
   </div>
 
-  <!-- Filtro por datas com destaque -->
   <div class="filter-bar">
-    <!-- Grupo de calendários com destaque -->
     <div class="date-group card-highlight p-3">
       <mat-form-field>
         <mat-label>Data Inicial</mat-label>
@@ -27,7 +24,6 @@
       </mat-form-field>
     </div>
 
-    <!-- Grupo de botões -->
     <div class="actions-group">
       <button mat-raised-button color="primary" (click)="applyFilter()">
         <mat-icon>search</mat-icon>
@@ -41,7 +37,6 @@
     </div>
   </div>
 
-  <!-- Tabela de agendamentos -->
   <table mat-table [dataSource]="appointments" class="mat-elevation-z1 w-100" *ngIf="appointments.length > 0">
     <ng-container matColumnDef="id">
       <th mat-header-cell *matHeaderCellDef> ID </th>
@@ -79,7 +74,6 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
 
-  <!-- Paginador -->
   <mat-paginator
     [length]="totalElements"
     [pageSize]="size"
@@ -89,7 +83,6 @@
     (page)="onPageChange($event)">
   </mat-paginator>
 
-  <!-- Mensagens de estado -->
   <div *ngIf="!appointments.length && !loading" class="text-center mt-4 text-muted">
     Nenhum agendamento encontrado.
   </div>
