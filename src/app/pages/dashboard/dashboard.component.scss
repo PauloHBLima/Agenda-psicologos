@@ -1,144 +1,138 @@
 .dashboard-container {
-  max-width: 800px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 1rem 1rem 3rem;
+  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  box-sizing: border-box;
+  background-color: #f5f5f5;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .dashboard-title {
+  font-size: 2.4rem;
   text-align: center;
   font-weight: 700;
-  font-size: 2.6rem;
   color: #6F42C1;
-  margin-bottom: 2rem;
-  padding: 1rem 0;
-  border-radius: 12px;
-  background-color: #f9fafb;
-  box-shadow: 0 4px 12px rgba(111, 66, 193, 0.15);
 }
 
-.dashboard-grid {
-  width: 100%;
+/* CARDS DE TOTAL */
+.cards-overview {
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
 }
 
 .dashboard-card {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   border-radius: 12px;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  padding: 1rem 1.5rem;
+  flex: 1;
+  min-height: 130px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    cursor: pointer;
+  }
 }
 
 .dashboard-card h3 {
-  margin-bottom: 1rem;
+  font-size: 1.1rem;
   font-weight: 600;
-  color: inherit;
+  margin-bottom: 0.5rem;
+  text-align: center;
 }
-
 
 .dashboard-card .card-content {
-  font-size: 3rem;
+  font-size: 2rem;
   font-weight: 700;
-
-  color: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
+/* CORES DOS CARDS */
 .clients-card {
-  background: #6F42C1; 
-  color: white;
-}
-
-.clients-card h3,
-.clients-card .card-content {
-  color: white;
+  background: #6F42C1;
+  color: #fff;
 }
 
 .appointments-card {
-  background: #F97316; 
-  color: white;
+  background: #F97316;
+  color: #fff;
 }
 
-.appointments-card h3,
-.appointments-card .card-content {
-  color: white;
+/* GRÁFICOS */
+.charts-overview {
+  display: flex;
+  gap: 20px;
 }
 
 .chart-card {
+  flex: 1;
   padding: 1rem;
-  border-radius: 12px;
-  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+  min-height: 240px;
+
+  h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.6rem;
+    color: #444;
+  }
+
+  canvas {
+    width: 100% !important;
+    height: calc(100% - 2rem) !important;
+  }
+}
+
+/* AÇÕES RÁPIDAS */
+.actions-card {
+  padding: 1.2rem 2rem;
+  border-radius: 14px;
   display: flex;
   flex-direction: column;
-}
-
-.chart-card h3 {
-  font-weight: 600;
-  color: #444;
-  margin-bottom: 1rem;
-}
-
-.chart-card canvas {
-  flex: 1;
-  width: 100% !important;
-  height: auto !important;
-}
-
-.actions-card {
-  padding: 1.5rem 2rem;
-  border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-  background: #fff;
-  max-width: 720px;
-  margin: 0 auto;
+  gap: 1rem;
   text-align: center;
 }
 
 .actions-card h2 {
+  font-size: 1.3rem;
   font-weight: 700;
-  color: #333;
-  margin-bottom: 1.5rem;
-  letter-spacing: 0.03em;
 }
 
 .actions-buttons {
   display: flex;
   flex-wrap: wrap;
+  gap: 12px;
   justify-content: center;
-  gap: 16px;
 }
 
-.actions-buttons button.mat-raised-button {
+.actions-buttons button {
   min-width: 140px;
-  padding: 0.55rem 1.6rem;
+  padding: 0.5rem 1.4rem;
+  font-size: 0.95rem;
   font-weight: 600;
-  font-size: 1rem;
-  border-radius: 28px;
-  text-transform: none;
-  box-shadow: none;
+  border-radius: 24px;
   transition: background-color 0.3s ease;
 }
 
-.actions-buttons button[color="primary"] {
-  background-color: #3B82F6; 
-  color: #fff;
-}
+/* RESPONSIVO */
+@media (max-width: 900px) {
+  .cards-overview,
+  .charts-overview {
+    flex-direction: column;
+  }
 
-.actions-buttons button[color="primary"]:hover {
-  background-color: #2563EB; 
-}
-
-.actions-buttons button[color="accent"] {
-  background-color: #EC4899; 
-  color: #fff;
-}
-
-.actions-buttons button[color="accent"]:hover {
-  background-color: #DB2777; 
-}
-
-@media (max-width: 800px) {
-  .dashboard-grid {
-    grid-template-columns: 1fr !important;
+  .actions-buttons {
+    flex-direction: column;
   }
 }

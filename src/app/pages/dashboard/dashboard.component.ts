@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { ClientService } from '../../services/client.service';
-import { AppointmentService } from '../../services/appointment.service';
+import { ClientService, Page, Client } from '../../services/client.service';
+import { AppointmentService, Page as AppointmentPage } from '../../services/appointment.service';
 
 import { MatCardModule } from '@angular/material/card';
 import { MatGridListModule } from '@angular/material/grid-list';
@@ -12,6 +12,7 @@ import { RouterModule } from '@angular/router';
 
 import { NgChartsModule } from 'ng2-charts';
 import { ChartConfiguration, ChartOptions } from 'chart.js';
+import { AppointmentMin } from '../../interfaces/appointment-min.interface';
 
 @Component({
   selector: 'app-dashboard',
@@ -34,7 +35,6 @@ export class DashboardComponent implements OnInit {
   loadingClients = false;
   loadingAppointments = false;
 
-  // Dados para gráfico de clientes por mês
   public clientsChartData: ChartConfiguration<'bar'>['data'] = {
     labels: [],
     datasets: [
@@ -87,8 +87,9 @@ export class DashboardComponent implements OnInit {
     this.loadingClients = true;
     this.loadingAppointments = true;
 
-    this.clientService.getClients(0, 1).subscribe({
-      next: (res) => {
+    // Usando o método correto getClientsFull e tipando corretamente
+    this.clientService.getClientsFull(0, 1).subscribe({
+      next: (res: Page<Client>) => {
         this.totalClients = res.totalElements || 0;
         this.loadingClients = false;
       },
@@ -99,7 +100,7 @@ export class DashboardComponent implements OnInit {
     });
 
     this.appointmentService.getAllPaginated(0, 1).subscribe({
-      next: (res) => {
+      next: (res: AppointmentPage<AppointmentMin>) => {
         this.totalAppointments = res.totalElements || 0;
         this.loadingAppointments = false;
       },
@@ -110,14 +111,12 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  // Simulação de dados para gráficos
   loadChartsData(): void {
-    // Labels: meses do ano
     const meses = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
     this.clientsChartData.labels = meses;
     this.appointmentsChartData.labels = meses;
 
-    // Dados aleatórios para demonstração (substitua com dados reais via API)
+    // Dados de exemplo (substituir por dados reais via API)
     this.clientsChartData.datasets[0].data = [5, 10, 8, 15, 12, 20, 18, 25, 22, 28, 30, 35];
     this.appointmentsChartData.datasets[0].data = [7, 9, 12, 14, 20, 18, 24, 28, 25, 30, 33, 40];
   }
