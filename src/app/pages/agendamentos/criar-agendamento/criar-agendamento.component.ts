@@ -96,9 +96,9 @@ export class CriarAgendamentoComponent implements OnInit {
   private combineDateAndTime(date: Date, timeString: string): Date {
     const [hours, minutes] = timeString.split(':').map(Number);
     const combined = new Date(date);
-    combined.setHours(hours);
-    combined.setMinutes(minutes);
-    combined.setSeconds(0);
+    combined.setUTCHours(hours);
+    combined.setUTCMinutes(minutes);
+    combined.setUTCSeconds(0);
     return combined;
   }
 }
