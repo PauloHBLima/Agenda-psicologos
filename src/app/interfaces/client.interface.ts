@@ -1,3 +1,5 @@
+import { EmergencyContact } from "../services/emergency-contact.service";
+
 export interface Client {
   id: number;
   name: string;
@@ -10,4 +12,5 @@ export interface Client {
   treatmentStartDate: string; 
   treatmentEndDate?: string; 
   appointmentDurationInMinutes: number;
+   emergencyContacts?: EmergencyContact[];
 }
