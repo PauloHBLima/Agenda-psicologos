@@ -1,87 +1,116 @@
-<mat-card class="p-4" style="max-width: 700px; margin: auto;">
-  <h2 class="mb-3">{{ clientId ? 'Editar Cliente' : 'Novo Cliente' }}</h2>
+<mat-card class="form-card">
+  <mat-card-title>Cadastro / Edição de Cliente</mat-card-title>
 
-  <form [formGroup]="form" (ngSubmit)="submit()">
+  <form [formGroup]="form" (ngSubmit)="submit()" class="client-form">
 
-    <mat-form-field appearance="fill" class="w-100 mb-3">
-      <mat-label>Nome</mat-label>
-      <input matInput formControlName="name" required autocomplete="off" />
-      <mat-error *ngIf="f.name.touched && f.name.errors?.['required']">Nome é obrigatório</mat-error>
-      <mat-error *ngIf="f.name.touched && f.name.errors?.['minlength']">Nome deve ter no mínimo 3 caracteres</mat-error>
-    </mat-form-field>
+    <!-- Dados principais do cliente -->
+    <div class="form-section">
+      <h3>Informações Pessoais</h3>
 
-    <div class="d-flex mb-3" style="gap: 16px;">
-      <mat-form-field appearance="fill" class="flex-grow-1">
-        <mat-label>CPF</mat-label>
-        <input matInput formControlName="cpf" maxlength="11" />
-        <mat-error *ngIf="f.cpf.touched && f.cpf.errors?.['pattern']">CPF deve conter 11 dígitos</mat-error>
+      <mat-form-field appearance="outline">
+        <mat-label>Nome</mat-label>
+        <input matInput formControlName="name" />
       </mat-form-field>
 
-      <mat-form-field appearance="fill" class="flex-grow-1">
+      <mat-form-field appearance="outline">
+        <mat-label>CPF</mat-label>
+        <input matInput formControlName="cpf" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
         <mat-label>Data de Nascimento</mat-label>
-        <input matInput type="date" formControlName="birthDate" />
+        <input matInput [matDatepicker]="birthPicker" formControlName="birthDate" />
+        <mat-datepicker-toggle matSuffix [for]="birthPicker"></mat-datepicker-toggle>
+        <mat-datepicker #birthPicker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Telefone</mat-label>
+        <input matInput formControlName="phoneNumber" />
       </mat-form-field>
     </div>
 
-    <mat-form-field appearance="fill" class="w-100 mb-3">
-      <mat-label>Email</mat-label>
-      <input matInput type="email" formControlName="email" />
-      <mat-error *ngIf="f.email.touched && f.email.errors?.['email']">Email inválido</mat-error>
-    </mat-form-field>
+    <!-- Informações de agendamento -->
+    <div class="form-section">
+      <h3>Agendamento e Tratamento</h3>
 
-    <mat-form-field appearance="fill" class="w-100 mb-3">
-      <mat-label>Telefone</mat-label>
-      <input matInput formControlName="phoneNumber" maxlength="11" />
-      <mat-error *ngIf="f.phoneNumber.touched && f.phoneNumber.errors?.['pattern']">
-        O telefone deve conter 10 ou 11 dígitos
-      </mat-error>
-    </mat-form-field>
-
-    <div class="d-flex mb-3" style="gap: 16px;">
-      <mat-form-field appearance="fill" class="flex-grow-1">
-        <mat-label>Valor da Consulta</mat-label>
+      <mat-form-field appearance="outline">
+        <mat-label>Preço da Consulta</mat-label>
         <input matInput type="number" formControlName="appointmentPrice" />
       </mat-form-field>
 
-      <mat-form-field appearance="fill" class="flex-grow-1">
-        <mat-label>Frequência (dias)</mat-label>
+      <mat-form-field appearance="outline">
+        <mat-label>Frequência</mat-label>
         <input matInput type="number" formControlName="appointmentFrequency" />
       </mat-form-field>
-    </div>
 
-    <div class="d-flex mb-3" style="gap: 16px;">
-      <mat-form-field appearance="fill" class="flex-grow-1">
-        <mat-label>Início do Tratamento</mat-label>
-        <input matInput type="datetime-local" formControlName="treatmentStartDate" />
+      <mat-form-field appearance="outline">
+        <mat-label>Data de Início</mat-label>
+        <input matInput [matDatepicker]="startPicker" formControlName="treatmentStartDate" />
+        <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+        <mat-datepicker #startPicker></mat-datepicker>
       </mat-form-field>
 
-      <mat-form-field appearance="fill" class="flex-grow-1">
-        <mat-label>Fim do Tratamento</mat-label>
-        <input matInput type="datetime-local" formControlName="treatmentEndDate" />
+      <mat-form-field appearance="outline">
+        <mat-label>Data de Término</mat-label>
+        <input matInput [matDatepicker]="endPicker" formControlName="treatmentEndDate" />
+        <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+        <mat-datepicker #endPicker></mat-datepicker>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Duração da Sessão (min)</mat-label>
+        <input matInput type="number" formControlName="appointmentDurationInMinutes" />
       </mat-form-field>
     </div>
 
-    <mat-form-field appearance="fill" class="w-100 mb-4">
-      <mat-label>Duração da Sessão (minutos)</mat-label>
-      <input matInput type="number" formControlName="appointmentDurationInMinutes" />
-    </mat-form-field>
+    <!-- Contatos de emergência -->
+    <div class="form-section emergency-section">
+      <h3>Contatos de Emergência</h3>
+      <div formArrayName="emergencyContacts">
+        <div *ngFor="let ec of emergencyContacts.controls; let i = index" [formGroupName]="i" class="emergency-contact">
 
-    <div class="d-flex justify-content-between align-items-center">
-      <button mat-stroked-button color="warn" [routerLink]="['/clientes']" type="button">
-        Cancelar
-      </button>
+          <mat-form-field appearance="outline">
+            <mat-label>Nome</mat-label>
+            <input matInput formControlName="name" />
+          </mat-form-field>
 
-      <button
-        mat-raised-button
-        color="primary"
-        type="submit"
-        [disabled]="form.invalid || saving"
-        style="min-width: 110px; display: flex; align-items: center; justify-content: center; gap: 8px;"
-      >
-        <mat-spinner *ngIf="saving" diameter="20"></mat-spinner>
-        <span *ngIf="!saving">{{ clientId ? 'Atualizar' : 'Salvar' }}</span>
-        <span *ngIf="saving">Salvando...</span>
+          <mat-form-field appearance="outline">
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Telefone</mat-label>
+            <input matInput formControlName="phoneNumber" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Parentesco</mat-label>
+            <input matInput formControlName="relationship" />
+          </mat-form-field>
+
+          <button mat-mini-button color="warn" type="button" (click)="removeEmergencyContact(i)">
+            Remover
+          </button>
+        </div>
+      </div>
+
+      <button mat-raised-button color="accent" type="button" (click)="addEmergencyContact()">
+        Adicionar Contato de Emergência
       </button>
+    </div>
+
+    <div class="form-actions">
+      <button mat-raised-button color="primary" type="submit" [disabled]="saving">
+        {{ clientId ? 'Atualizar' : 'Salvar' }}
+      </button>
+      <mat-progress-spinner *ngIf="saving" diameter="24" mode="indeterminate"></mat-progress-spinner>
     </div>
   </form>
 </mat-card>
