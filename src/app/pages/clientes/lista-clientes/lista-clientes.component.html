@@ -1,15 +1,13 @@
-<mat-card class="card-wrapper listar-clientes-card">
+<mat-card class="p-4 mx-auto card-wrapper">
   <!-- Cabeçalho -->
   <div class="header mb-3">
     <h2>Lista de Clientes</h2>
     <div class="buttons-group">
       <button mat-stroked-button color="accent" (click)="goToDashboard()">
-        <mat-icon>home</mat-icon>
-        Início
+        <mat-icon>home</mat-icon> Início
       </button>
       <button mat-raised-button color="primary" (click)="goToCreate()">
-        <mat-icon>person_add</mat-icon>
-        Novo Cliente
+        <mat-icon>person_add</mat-icon> Novo Cliente
       </button>
     </div>
   </div>
@@ -18,7 +16,7 @@
   <div class="filter-bar mb-3">
     <mat-form-field appearance="fill">
       <mat-label>Buscar por nome</mat-label>
-      <input matInput [(ngModel)]="nameFilter" (keyup.enter)="onSearch()" placeholder="Digite o nome do cliente" autocomplete="off"/>
+      <input matInput [(ngModel)]="nameFilter" (keyup.enter)="onSearch()" placeholder="Digite o nome do cliente"/>
     </mat-form-field>
     <div class="actions-group">
       <button mat-raised-button color="primary" (click)="onSearch()">
@@ -33,7 +31,7 @@
   <!-- Lista de clientes -->
   <div class="clients-list">
     <div *ngIf="!loading && clients.length > 0">
-      <div *ngFor="let client of clients" class="client-card">
+      <div *ngFor="let client of clients" class="client-card p-3 mb-2">
         <div class="info">
           <span class="label">Nome:</span>
           <span class="clickable" (click)="editClient(client.id!)">{{ client.name }}</span>
@@ -42,11 +40,6 @@
           <span class="label">Nascimento:</span> {{ client.birthDate | date:'dd/MM/yyyy' }}
           <span class="label">Email:</span> {{ client.email }}
           <span class="label">Telefone:</span> {{ client.phoneNumber }}
-          <span class="label">Valor Consulta:</span> {{ client.appointmentPrice | currency }}
-          <span class="label">Frequência (dias):</span> {{ client.appointmentFrequency }}
-          <span class="label">Início Tratamento:</span> {{ client.treatmentStartDate | date:'dd/MM/yyyy HH:mm' }}
-          <span class="label">Fim Tratamento:</span> {{ client.treatmentEndDate | date:'dd/MM/yyyy HH:mm' }}
-          <span class="label">Duração Sessão (min):</span> {{ client.appointmentDurationInMinutes }}
         </div>
 
         <div class="actions">
@@ -72,7 +65,7 @@
     </div>
   </div>
 
-  <!-- Paginação centralizada -->
+  <!-- Paginação -->
   <div class="paginator-container">
     <mat-paginator
       [length]="totalElements"

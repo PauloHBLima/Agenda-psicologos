@@ -12,11 +12,10 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../../shared/confirm-dialog/confirm-dialog.component';
-import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-lista-clientes',
-  templateUrl: './lista-clientes.component.html',
   standalone: true,
   imports: [
     CommonModule,
@@ -29,6 +28,8 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
     MatDialogModule,
     MatProgressSpinnerModule
   ],
+  templateUrl: './lista-clientes.component.html',
+  styleUrls: ['./lista-clientes.component.scss']
 })
 export class ClientListComponent implements OnInit {
   clients: Client[] = [];
@@ -94,9 +95,7 @@ export class ClientListComponent implements OnInit {
 
   deleteClient(id: number, name: string) {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: {
-        message: `Tem certeza que deseja excluir o cliente "${name}"?`
-      }
+      data: { message: `Tem certeza que deseja excluir o cliente "${name}"?` }
     });
 
     dialogRef.afterClosed().subscribe(result => {

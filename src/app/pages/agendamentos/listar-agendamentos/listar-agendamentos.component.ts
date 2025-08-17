@@ -74,24 +74,27 @@ export class ListarAgendamentosComponent implements OnInit {
     this.loadAppointments();
   }
 
-private formatDateRange(start: Date, end: Date): { startISO: string; endISO: string } {
-  const startISO = moment(start).startOf('day').toISOString();
-  const endISO = moment(end).endOf('day').toISOString();
-  return { startISO, endISO };
-}
+  private formatDate(date: Date): string {
+    return moment(date).format('YYYY-MM-DD');
+  }
+
   loadAppointments(): void {
     this.loading = true;
 
     if (this.startDate && this.endDate) {
-      const { startISO, endISO } = this.formatDateRange(this.startDate, this.endDate);
+      const start = this.formatDate(this.startDate);
+      const end = this.formatDate(this.endDate);
 
-      this.service.getByDate(startISO, endISO, this.page, this.size).subscribe({
+      this.service.getByDate(start, end, this.page, this.size).subscribe({
         next: (data: Page<Appointment>) => {
           this.appointments = data.content;
           this.totalElements = data.totalElements;
           this.loading = false;
         },
-        error: () => this.loading = false
+        error: (err) => {
+          console.error('Erro ao buscar agendamentos:', err);
+          this.loading = false;
+        }
       });
     } else {
       this.service.getAllPaginated(this.page, this.size).subscribe({
@@ -100,7 +103,10 @@ private formatDateRange(start: Date, end: Date): { startISO: string; endISO: str
           this.totalElements = data.totalElements;
           this.loading = false;
         },
-        error: () => this.loading = false
+        error: (err) => {
+          console.error('Erro ao buscar agendamentos:', err);
+          this.loading = false;
+        }
       });
     }
   }
@@ -128,8 +134,8 @@ private formatDateRange(start: Date, end: Date): { startISO: string; endISO: str
   }
 
   voltarParaHome(): void {
-  this.router.navigate(['/']);
-}
+    this.router.navigate(['/']);
+  }
 
   editar(id: number): void {
     this.router.navigate(['/agendamentos/editar', id]);
