@@ -1,0 +1,50 @@
+.login-card {
+  width: 100%;
+  max-width: 400px;
+  margin: 100px auto;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  border-radius: 12px;
+  text-align: center;
+  background-color: #fff;
+
+  h2 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #333;
+  }
+
+  .full-width {
+    width: 100%;
+  }
+
+  button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    height: 45px;
+  }
+
+  .error-message {
+    color: #d32f2f;
+    font-size: 0.9rem;
+    margin-top: -0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  mat-progress-spinner {
+    color: #fff;
+  }
+}
+
+/* Responsividade */
+@media (max-width: 480px) {
+  .login-card {
+    margin: 50px 1rem;
+    padding: 1.5rem;
+  }
+}

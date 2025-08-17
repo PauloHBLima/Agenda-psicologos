@@ -1,0 +1,20 @@
+<mat-card class="login-card">
+  <h2>Login</h2>
+
+  <mat-form-field class="full-width">
+    <mat-label>E-mail</mat-label>
+    <input matInput [(ngModel)]="email" type="email" placeholder="Digite seu e-mail" />
+  </mat-form-field>
+
+  <mat-form-field class="full-width">
+    <mat-label>Senha</mat-label>
+    <input matInput [(ngModel)]="password" type="password" placeholder="Digite sua senha" />
+  </mat-form-field>
+
+  <div *ngIf="error" class="error-message">{{ error }}</div>
+
+  <button mat-raised-button color="primary" class="full-width" (click)="onLogin()" [disabled]="loading">
+    <mat-progress-spinner *ngIf="loading" diameter="20" mode="indeterminate"></mat-progress-spinner>
+    <span *ngIf="!loading">Entrar</span>
+  </button>
+</mat-card>
