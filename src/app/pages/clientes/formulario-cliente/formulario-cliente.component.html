@@ -3,7 +3,7 @@
 
   <form [formGroup]="form" (ngSubmit)="submit()" class="client-form">
 
-    <!-- Dados principais do cliente -->
+
     <div class="form-section">
       <h3>Informações Pessoais</h3>
 
@@ -35,7 +35,6 @@
       </mat-form-field>
     </div>
 
-    <!-- Informações de agendamento -->
     <div class="form-section">
       <h3>Agendamento e Tratamento</h3>
 
@@ -69,11 +68,10 @@
       </mat-form-field>
     </div>
 
-    <!-- Contatos de emergência -->
     <div class="form-section emergency-section">
       <h3>Contatos de Emergência</h3>
-      <div formArrayName="emergencyContacts">
-        <div *ngFor="let ec of emergencyContacts.controls; let i = index" [formGroupName]="i" class="emergency-contact">
+      <div formArrayName="contacts">
+        <div *ngFor="let ec of contacts.controls; let i = index" [formGroupName]="i" class="emergency-contact">
 
           <mat-form-field appearance="outline">
             <mat-label>Nome</mat-label>
@@ -95,13 +93,13 @@
             <input matInput formControlName="relationship" />
           </mat-form-field>
 
-          <button mat-mini-button color="warn" type="button" (click)="removeEmergencyContact(i)">
+          <button mat-mini-button color="warn" type="button" (click)="removeContact(i)">
             Remover
           </button>
         </div>
       </div>
 
-      <button mat-raised-button color="accent" type="button" (click)="addEmergencyContact()">
+      <button mat-raised-button color="accent" type="button" (click)="addContact()">
         Adicionar Contato de Emergência
       </button>
     </div>

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormArray, FormControl, NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormArray, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Client, ClientService } from '../../../services/client.service';
 import { CommonModule } from '@angular/common';
@@ -13,10 +13,12 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
 
 export interface EmergencyContact {
+  id?: number;
   name: string;
   email?: string;
   phoneNumber?: string;
   relationship: string;
+  clientId?: number | null; 
 }
 
 @Component({
@@ -50,11 +52,12 @@ export class FormularioClienteComponent implements OnInit {
     treatmentStartDate: FormControl<string>;
     treatmentEndDate: FormControl<string>;
     appointmentDurationInMinutes: FormControl<number | null>;
-    emergencyContacts: FormArray<FormGroup<{
+    contacts: FormArray<FormGroup<{
       name: FormControl<string>;
       email: FormControl<string>;
       phoneNumber: FormControl<string>;
       relationship: FormControl<string>;
+      clientId: FormControl<number | null>;
     }>>;
   }>;
 
@@ -78,58 +81,62 @@ export class FormularioClienteComponent implements OnInit {
   }
 
   buildForm() {
-  this.form = this.fb.group({
-    name: this.fb.nonNullable.control('', [Validators.required, Validators.minLength(3)]),
-    cpf: this.fb.nonNullable.control('', [Validators.pattern(/^\d{11}$/)]),
-    birthDate: this.fb.nonNullable.control(''),
-    email: this.fb.nonNullable.control('', [Validators.email]),
-    phoneNumber: this.fb.nonNullable.control('', [Validators.pattern(/^\d{10,11}$/)]),
-    appointmentPrice: this.fb.control<number | null>(0, [Validators.min(0)]),
-    appointmentFrequency: this.fb.control<number | null>(1, [Validators.min(1)]),
-    treatmentStartDate: this.fb.nonNullable.control(''),
-    treatmentEndDate: this.fb.nonNullable.control(''),
-    appointmentDurationInMinutes: this.fb.control<number | null>(50, [Validators.min(10)]),
-    emergencyContacts: this.fb.array<FormGroup<{ 
-      name: FormControl<string>; 
-      email: FormControl<string>; 
-      phoneNumber: FormControl<string>; 
-      relationship: FormControl<string>; 
-    }>>([])
-  });
-}
+    this.form = this.fb.group({
+      name: this.fb.nonNullable.control('', [Validators.required, Validators.minLength(3)]),
+      cpf: this.fb.nonNullable.control('', [Validators.pattern(/^\d{11}$/)]),
+      birthDate: this.fb.nonNullable.control(''),
+      email: this.fb.nonNullable.control('', [Validators.email]),
+      phoneNumber: this.fb.nonNullable.control('', [Validators.pattern(/^\d{10,11}$/)]),
+      appointmentPrice: this.fb.control<number | null>(0, [Validators.min(0)]),
+      appointmentFrequency: this.fb.control<number | null>(1, [Validators.min(1)]),
+      treatmentStartDate: this.fb.nonNullable.control(''),
+      treatmentEndDate: this.fb.nonNullable.control(''),
+      appointmentDurationInMinutes: this.fb.control<number | null>(50, [Validators.min(10)]),
+      contacts: this.fb.array<FormGroup<{ 
+        name: FormControl<string>; 
+        email: FormControl<string>; 
+        phoneNumber: FormControl<string>; 
+        relationship: FormControl<string>; 
+        clientId: FormControl<number | null>;
+      }>>([])
+    });
+  }
 
-get emergencyContacts(): FormArray<FormGroup<{ 
-  name: FormControl<string>; 
-  email: FormControl<string>; 
-  phoneNumber: FormControl<string>; 
-  relationship: FormControl<string>; 
-}>> {
-  return this.form.get('emergencyContacts') as FormArray<FormGroup<{
+  get contacts(): FormArray<FormGroup<{ 
     name: FormControl<string>; 
     email: FormControl<string>; 
     phoneNumber: FormControl<string>; 
     relationship: FormControl<string>; 
-  }>>;
-}
-  addEmergencyContact(contact?: EmergencyContact) {
+    clientId: FormControl<number | null>;
+  }>> {
+    return this.form.get('contacts') as FormArray<FormGroup<{
+      name: FormControl<string>; 
+      email: FormControl<string>; 
+      phoneNumber: FormControl<string>; 
+      relationship: FormControl<string>; 
+      clientId: FormControl<number | null>;
+    }>>;
+  }
+
+  addContact(contact?: Partial<EmergencyContact>) { 
     const group = this.fb.group({
       name: this.fb.nonNullable.control(contact?.name || '', [Validators.required, Validators.minLength(3)]),
       email: this.fb.nonNullable.control(contact?.email || '', [Validators.email]),
       phoneNumber: this.fb.nonNullable.control(contact?.phoneNumber || '', [Validators.pattern(/^\d{10,11}$/)]),
-      relationship: this.fb.nonNullable.control(contact?.relationship || '', [Validators.required])
+      relationship: this.fb.nonNullable.control(contact?.relationship || '', [Validators.required]),
+      clientId: this.fb.control(contact?.clientId ?? null)
     });
-    this.emergencyContacts.push(group);
+    this.contacts.push(group);
   }
 
-  removeEmergencyContact(index: number) {
-    this.emergencyContacts.removeAt(index);
+  removeContact(index: number) {
+    this.contacts.removeAt(index);
   }
 
   loadClient() {
     this.loading = true;
     this.service.getClient(this.clientId!).subscribe({
       next: (client) => {
-        // Ajusta números opcionais se estiverem null
         const clientData = {
           ...client,
           appointmentPrice: client.appointmentPrice ?? 0,
@@ -139,9 +146,8 @@ get emergencyContacts(): FormArray<FormGroup<{
 
         this.form.patchValue(clientData);
 
-        // Carregar contatos de emergência se existirem
-        if ((client as any).emergencyContacts) {
-          (client as any).emergencyContacts.forEach((ec: EmergencyContact) => this.addEmergencyContact(ec));
+        if ((client as any).contacts) {
+          (client as any).contacts.forEach((ec: EmergencyContact) => this.addContact(ec));
         }
 
         this.loading = false;
@@ -160,8 +166,9 @@ get emergencyContacts(): FormArray<FormGroup<{
 
     const rawData = this.form.getRawValue();
 
-    const data: Client & { emergencyContacts?: EmergencyContact[] } = {
+    const data: Client & { contacts?: EmergencyContact[] } = {
       ...rawData,
+      contacts: rawData.contacts ?? [],
       appointmentPrice: rawData.appointmentPrice ?? 0,
       appointmentFrequency: rawData.appointmentFrequency ?? 1,
       appointmentDurationInMinutes: rawData.appointmentDurationInMinutes ?? 50,

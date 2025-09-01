@@ -5,8 +5,8 @@ import { Observable } from 'rxjs';
 export interface EmergencyContact {
   id?: number;
   name: string;
-  email: string;
-  phoneNumber: string;
+  email?: string;
+  phoneNumber?: string;
   relationship: string;
   clientId?: number;
 }
@@ -16,7 +16,7 @@ export interface EmergencyContact {
 })
 export class EmergencyContactService {
 
-  private baseUrl = 'http://localhost:8080/emergency-contacts'; // ajuste para a sua API
+  private baseUrl = 'http://localhost:8080/emergency-contacts';
 
   constructor(private http: HttpClient) { }
 

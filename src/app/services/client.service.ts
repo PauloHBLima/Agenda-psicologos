@@ -2,7 +2,6 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
 
-// Tipo para contatos de emergência
 export interface EmergencyContact {
   name: string;
   email?: string;
@@ -10,7 +9,6 @@ export interface EmergencyContact {
   relationship: string;
 }
 
-// Tipo completo de cliente
 export interface Client {
   id?: number;
   name: string;
@@ -26,13 +24,11 @@ export interface Client {
   emergencyContacts?: EmergencyContact[];
 }
 
-// Tipo resumido para listagens
 export interface ClientMin {
   id: number;
   name: string;
 }
 
-// Tipo de paginação
 export interface Page<T> {
   content: T[];
   totalElements: number;
@@ -47,7 +43,6 @@ export class ClientService {
 
   constructor(private http: HttpClient) {}
 
-  // Listagem completa com paginação e filtro
   getClientsFull(
     page: number = 0,
     size: number = 10,
@@ -73,36 +68,31 @@ export class ClientService {
     );
   }
 
-  // Buscar cliente por ID
   getClient(id: number): Observable<Client> {
     return this.http.get<Client>(`${this.baseUrl}/${id}`).pipe(
       map(this.mapClient)
     );
   }
 
-  // Criar novo cliente
   createClient(client: Client): Observable<Client> {
     return this.http.post<Client>(this.baseUrl, client);
   }
 
-  // Atualizar cliente existente
   updateClient(id: number, client: Client): Observable<Client> {
     return this.http.put<Client>(`${this.baseUrl}/${id}`, client);
   }
 
-  // Deletar cliente
+
   deleteClient(id: number) {
     return this.http.delete(`${this.baseUrl}/${id}`);
   }
 
-  // Total de clientes
   getTotalClients(): Observable<number> {
     return this.http.get<{ total: number }>(`${this.baseUrl}/total`).pipe(
       map(response => response.total)
     );
   }
 
-  // Mapeia campos para garantir tipos corretos
   private mapClient(client: Client): Client {
     return {
       ...client,
